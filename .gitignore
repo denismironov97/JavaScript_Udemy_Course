@@ -1,3 +1,7 @@
+#Custom ignore files and directories
+notes.js
+final
+
 # Logs
 logs
 *.log
