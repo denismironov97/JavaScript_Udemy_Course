@@ -98,6 +98,22 @@ function challengeThree(
   );
 }
 
-challengeThree(96, 108, 89, 88, 91, 110);
-challengeThree(97, 112, 101, 109, 95, 123);
-challengeThree(97, 112, 101, 109, 95, 106);
+//challengeThree(96, 108, 89, 88, 91, 110);
+//challengeThree(97, 112, 101, 109, 95, 123);
+//challengeThree(97, 112, 101, 109, 95, 106);
+
+//Data 1: Test for bill values 275, 40 and 430
+function challengeFour(billValue) {
+  let tip =
+    billValue >= 50 && billValue <= 300 ? billValue * 0.15 : billValue * 0.2;
+  let total = billValue + tip;
+  let stringResult = `The bill was ${billValue.toFixed(
+    2
+  )}, the tip was ${tip.toFixed(2)}, and the total value ${total.toFixed(2)}`;
+
+  console.log(stringResult);
+}
+
+challengeFour(275);
+challengeFour(40);
+challengeFour(430);
