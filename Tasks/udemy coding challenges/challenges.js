@@ -1,5 +1,6 @@
-//Coding Challenge #1
+'use strict';
 
+//Coding Challenge #1
 function challengeOne() {
   //BMI = mass / height ** 2 = mass / (height * height) (mass in kg and height in meter);
 
@@ -114,6 +115,49 @@ function challengeFour(billValue) {
   console.log(stringResult);
 }
 
-challengeFour(275);
-challengeFour(40);
-challengeFour(430);
+//challengeFour(275);
+//challengeFour(40);
+//challengeFour(430);
+
+function challengeFive() {
+  const calcAverage = (scoreParam1, scoreParam2, scoreParam3) => {
+    return (scoreParam1 + scoreParam2 + scoreParam3) / 3;
+  };
+
+  const checkWinner = function (averageKoalas, averageDolphins) {
+    let stringMessage = 'No winners this race.';
+
+    if (averageKoalas >= averageDolphins * 2) {
+      stringMessage = `Koalas win (${averageKoalas} vs. ${averageDolphins})`;
+    } else if (averageDolphins >= averageKoalas * 2) {
+      stringMessage = `Dolphins win (${averageDolphins} vs. ${averageKoalas})`;
+    }
+
+    return stringMessage;
+  };
+
+  const averageKoalas = calcAverage(23, 34, 27);
+  const averageDolphins = calcAverage(85, 54, 41);
+  console.log(checkWinner(averageKoalas, averageDolphins));
+}
+//challengeFive();
+
+//Test data: 125, 555 and 44
+function challengeSix() {
+  const totalTipValue = calcTip([125, 555, 44]);
+
+  console.log(totalTipValue.toFixed(2));
+
+  function calcTip(billsArr) {
+    const tipsArr = billsArr.map((bill) => {
+      const tipValue = bill >= 50 && bill <= 300 ? 0.15 * bill : 0.2 * bill;
+      return tipValue;
+    });
+
+    let totalTipValue = 0;
+    tipsArr.forEach((tip) => (totalTipValue = totalTipValue + tip));
+
+    return totalTipValue;
+  }
+}
+//challengeSix();
