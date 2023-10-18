@@ -161,3 +161,61 @@ function challengeSix() {
   }
 }
 //challengeSix();
+
+function challengeSeven() {
+  const mark = {
+    firstName: 'Mark',
+    lastName: 'Miller',
+    weight: 78,
+    height: 1.69,
+
+    calcBMI() {
+      const personBMI = this.weight / this.height ** 2;
+      this.pBMI = personBMI;
+      return this.pBMI;
+    },
+  };
+
+  const john = {
+    firstName: 'John',
+    lastName: 'Smith',
+    weight: 92,
+    height: 1.95,
+
+    calcBMI: function () {
+      const personBMI = this.weight / this.height ** 2;
+      this.pBMI = personBMI;
+      return this.pBMI;
+    },
+  };
+
+  console.log(mark.calcBMI());
+  console.log(john.calcBMI());
+
+  console.log(mark.pBMI);
+  console.log(john.pBMI);
+
+  console.log(declareBMIWinner(john, mark));
+
+  function declareBMIWinner(person1, person2) {
+    let higherBMIPerson;
+    let lowerBMIPerson;
+
+    if (person1.pBMI > person2.pBMI) {
+      higherBMIPerson = person1;
+      lowerBMIPerson = person2;
+    } else if (person1.pBMI < person2.pBMI) {
+      higherBMIPerson = person2;
+      lowerBMIPerson = person1;
+    } else {
+      return 'Both people have the same BMI!';
+    }
+
+    return `${higherBMIPerson.firstName}'s BMI (${higherBMIPerson.pBMI.toFixed(
+      2
+    )}) is higher than ${
+      lowerBMIPerson.firstName
+    }'s (${lowerBMIPerson.pBMI.toFixed(2)})!`;
+  }
+}
+challengeSeven();
