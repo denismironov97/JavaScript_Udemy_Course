@@ -1,4 +1,4 @@
-'use strict';
+//'use strict';
 // PROBLEM 1:
 // We work for a company building a smart home thermometer. Our most recent task is this:
 //"Given an array of temperatures of one day, calculate the temperature amplitude. Keep in mind that sometimes there might be a sensor error."
@@ -22,7 +22,7 @@ const temperaturesOther = [
   'error',
   25,
 ];
-
+/*
 const tempsAmplitude = getTempAmplitude(temperatures);
 
 const mergedResultArr = mergeArrays(
@@ -30,8 +30,8 @@ const mergedResultArr = mergeArrays(
   getTempAmplitude(temperaturesOther)
 );
 
-//console.log(mergedResultArr);
-
+console.log(mergedResultArr);
+*/
 function getTempAmplitude(tempsArr) {
   let minTemp = Number.MAX_SAFE_INTEGER;
   let maxTemp = Number.MIN_SAFE_INTEGER;
@@ -71,6 +71,7 @@ TEST DATA 1: [17, 21, 23]
 TEST DATA 2: [12, 5, -5, 0, 4]
 */
 
+/*
 let forecasted1 = printForecast([17, 21, 23]);
 let forecasted2 = printForecast([12, 5, -5, 0, 4]);
 
@@ -85,3 +86,8 @@ function printForecast(dataArr) {
 
   return stringValue.trimEnd();
 }
+*/
+
+document.querySelector('button').addEventListener('click', (ev) => {
+  console.log(ev.target);
+});
