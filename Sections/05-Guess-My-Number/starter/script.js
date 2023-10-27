@@ -8,6 +8,7 @@ const checkBtn = document.querySelector('.check');
 const messageBoxEl = document.querySelector('.message');
 const startingScore = document.querySelector('.score');
 const highScore = document.querySelector('.highscore');
+const previousAnswerEl = document.querySelector('.previous-answer');
 
 document.querySelector('.again').addEventListener('click', resetGame);
 checkBtn.addEventListener('click', guessNumber);
@@ -21,8 +22,9 @@ function resetGame() {
   inputNumberEl.disabled = false;
   bodyEl.style.backgroundColor = '#222';
 
-  magicNumber = getRandomNumber();
   resetInputNumber(inputNumberEl);
+  previousAnswerEl.textContent = '';
+  magicNumber = getRandomNumber();
 
   console.log(`Magic number is ${magicNumber}.`);
 }
@@ -35,6 +37,8 @@ function guessNumber() {
     resetInputNumber(inputNumberEl);
     return;
   }
+
+  previousAnswerEl.textContent = inputNumber;
 
   if (inputNumber === magicNumber) {
     playerHasWonGame();
