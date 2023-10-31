@@ -118,3 +118,7 @@ h1 {
 .label-highscore {
   margin-bottom: 2.4rem;
 }
+
+.previous-answers {
+  color: #a21caf;
+}

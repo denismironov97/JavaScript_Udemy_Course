@@ -1,14 +1,16 @@
 'use strict';
 
 let magicNumber = getRandomNumber();
+let previousAnswersArr = [];
 
 const bodyEl = document.querySelector('body');
+const magicDivBox = document.querySelector('.number');
 const inputNumberEl = document.querySelector('.guess');
 const checkBtn = document.querySelector('.check');
 const messageBoxEl = document.querySelector('.message');
 const startingScore = document.querySelector('.score');
 const highScore = document.querySelector('.highscore');
-const previousAnswerEl = document.querySelector('.previous-answer');
+const previousAnswerEl = document.querySelector('.previous-answers');
 
 document.querySelector('.again').addEventListener('click', resetGame);
 checkBtn.addEventListener('click', guessNumber);
@@ -17,6 +19,7 @@ console.log(`Magic number is ${magicNumber}.`);
 
 function resetGame() {
   startingScore.textContent = 20;
+  magicDivBox.textContent = '?';
   messageBoxEl.textContent = 'Start guessing...';
   checkBtn.disabled = false;
   inputNumberEl.disabled = false;
@@ -38,7 +41,9 @@ function guessNumber() {
     return;
   }
 
-  previousAnswerEl.textContent = inputNumber;
+  previousAnswersArr.push(inputNumber);
+
+  previousAnswerEl.textContent = getLastThreeGivenAnswers(previousAnswersArr);
 
   if (inputNumber === magicNumber) {
     playerHasWonGame();
@@ -74,6 +79,7 @@ function guessNumber() {
 
   function playerHasWonGame() {
     messageBoxEl.textContent = '🎉 Correct Number! Play again.';
+    magicDivBox.textContent = magicNumber;
     bodyEl.style.backgroundColor = '#60b347';
     disablePlayerButtons();
   }
@@ -98,4 +104,18 @@ function resetInputNumber(inputNumberArg) {
 
 function getRandomNumber() {
   return Math.trunc(Math.random() * 20) + 1;
+}
+
+function getLastThreeGivenAnswers(dataArr) {
+  let lastThreeAnswers = [];
+
+  if (dataArr.length <= 3) {
+    for (let i = 0; i < dataArr.length; i++) {
+      lastThreeAnswers.push(dataArr[i]);
+    }
+  } else {
+    lastThreeAnswers = dataArr.slice(dataArr.length - 3);
+  }
+
+  return lastThreeAnswers.join(', ');
 }
