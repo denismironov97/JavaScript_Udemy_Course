@@ -45,6 +45,12 @@ main {
   transition: all 0.75s;
 }
 
+.score-points {
+  font-size: 2rem;
+  margin-bottom: 2.4rem;
+  color: #c7365f;
+}
+
 /* ELEMENTS */
 .name {
   position: relative;
@@ -53,7 +59,7 @@ main {
   letter-spacing: 1px;
   word-spacing: 2px;
   font-weight: 300;
-  margin-bottom: 1rem;
+  margin-bottom: 1.6rem;
 }
 
 .score {
