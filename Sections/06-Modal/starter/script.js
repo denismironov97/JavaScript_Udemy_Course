@@ -5,20 +5,22 @@ const modalBoxEl = document.querySelector('.modal');
 const closeBtnEl = document.querySelector('.close-modal');
 const overlayComponentEl = document.querySelector('.overlay');
 
-bodyEl.addEventListener('keydown', keydownHandler);
-bodyEl.addEventListener('click', clickHandler);
-
-closeBtnEl.addEventListener('click', closeModalComponent);
-
+// Anonymous function
+// Open/Show Modal window component
 document.querySelectorAll('.show-modal').forEach(btn =>
   btn.addEventListener('click', function (ev) {
-    // Open/Show Modal window component
     ev.stopPropagation();
 
     modalBoxEl.classList.remove('hidden');
     overlayComponentEl.classList.remove('hidden');
   })
 );
+
+closeBtnEl.addEventListener('click', closeModalComponent);
+
+overlayComponentEl.addEventListener('click', closeModalComponent);
+
+bodyEl.addEventListener('keydown', keydownHandler);
 
 function closeModalComponent(ev) {
   ev.stopPropagation();
@@ -35,11 +37,5 @@ function keydownHandler(evArg) {
     !overlayComponentEl.classList.contains('hidden')
   ) {
     closeModalComponent(evArg);
-  }
-}
-
-function clickHandler(ev) {
-  if (ev.target === overlayComponentEl) {
-    closeModalComponent(ev);
   }
 }
