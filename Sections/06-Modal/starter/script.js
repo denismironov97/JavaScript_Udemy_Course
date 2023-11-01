@@ -1,6 +1,5 @@
 'use strict';
 
-const bodyEl = document.querySelector('body');
 const modalBoxEl = document.querySelector('.modal');
 const closeBtnEl = document.querySelector('.close-modal');
 const overlayComponentEl = document.querySelector('.overlay');
@@ -20,7 +19,7 @@ closeBtnEl.addEventListener('click', closeModalComponent);
 
 overlayComponentEl.addEventListener('click', closeModalComponent);
 
-bodyEl.addEventListener('keydown', keydownHandler);
+document.addEventListener('keydown', keydownHandler);
 
 function closeModalComponent(ev) {
   ev.stopPropagation();
@@ -30,9 +29,9 @@ function closeModalComponent(ev) {
 }
 
 function keydownHandler(evArg) {
-  const keyBtn = evArg.key;
+  const pressedBtn = evArg.key;
   if (
-    keyBtn === 'Escape' &&
+    pressedBtn === 'Escape' &&
     !modalBoxEl.classList.contains('hidden') &&
     !overlayComponentEl.classList.contains('hidden')
   ) {
