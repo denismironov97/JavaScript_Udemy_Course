@@ -24,7 +24,7 @@ hideDiceRender();
 
 rollDiceBtnEl.addEventListener('click', playerRollDice);
 
-holdBtnEl.addEventListener('click', holdPlayerMove);
+holdBtnEl.addEventListener('click', switchPlayer);
 
 newGameBtnEl.addEventListener('click', resetDiceGame);
 
@@ -63,7 +63,7 @@ function playerRollDice() {
   }
 }
 
-function holdPlayerMove() {
+function switchPlayer() {
   const playerSection = determinePlayerMove(player1SectionEl, player2SectionEl);
   let playerCurrScore;
   let totalPlayerScore;
