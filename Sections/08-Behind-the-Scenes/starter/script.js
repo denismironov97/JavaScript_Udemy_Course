@@ -41,3 +41,17 @@ calcAge(1991);
 // console.log(age);
 // printAge(); 
 */
+
+function variableCollision() {
+  const varName = 'test1';
+  let flag = true;
+
+  if (flag) {
+    const varName = 'different';
+    console.log(varName);
+  }
+
+  console.log(varName);
+}
+
+variableCollision();
