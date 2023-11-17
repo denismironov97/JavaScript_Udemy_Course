@@ -1,7 +1,6 @@
 //'use strict';
 
 // Scoping in Practice
-
 /*
 function calcAge(birthYear) {
   const age = 2037 - birthYear;
@@ -145,7 +144,7 @@ f();
 
 // Regular Functions vs. Arrow Functions
 // var firstName = 'Matilda';
-
+/*
 const jonas = {
   firstName: 'Jonas',
   year: 1991,
@@ -189,9 +188,11 @@ var addArrow = (a, b) => {
   return a + b;
 };
 addArrow(2, 5, 8, 88, 13);
+*/
 
 // Primitives vs. Objects in Practice
 
+/*
 // Primitive types
 let lastName = 'Williams';
 let oldLastName = lastName;
@@ -226,3 +227,48 @@ jessicaCopy.family.push('John');
 
 console.log('Before marriage:', jessica2);
 console.log('After marriage: ', jessicaCopy);
+*/
+
+/*
+const obj = {
+  name: 'angularfeed',
+  version: 1,
+};
+
+obj.prototype = {
+  type: 'blog',
+};
+
+const angObj = Object.create(obj);
+console.log(angObj); // {}
+console.log(angObj.name); // angularfeed
+console.log(angObj.prototype.type); // blog
+*/
+
+//Creating deep clones of objects/reference types of variables
+const peshoCat = {
+  color: 'blue',
+  gender: 'male',
+  weight: 3,
+  age: 5,
+  siblings: ['Ivan', 'Anq', 'Petur'],
+};
+
+const goshoCat = Object.assign({}, peshoCat);
+goshoCat.weight = 1;
+goshoCat.age = 3;
+
+console.log('Pesho cat obj:', peshoCat);
+console.log('Gosho cat obj:', goshoCat);
+
+goshoCat.siblings.push('Mariq', 'Tomas');
+
+console.log('Pesho cat obj:', peshoCat);
+console.log('Gosho cat obj:', goshoCat);
+
+const zoroCat = structuredClone(peshoCat);
+zoroCat.siblings.splice(1, 3);
+
+console.log('Pesho cat obj:', peshoCat);
+console.log('Gosho cat obj:', goshoCat);
+console.log('Zoro cat obj:', zoroCat);
