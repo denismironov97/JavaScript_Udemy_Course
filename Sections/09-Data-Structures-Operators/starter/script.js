@@ -300,6 +300,7 @@ console.log(rest1);
 console.log(rest2);
 */
 
+/*
 ///////////////////////////////////////
 // The for-of Loop
 const menu = [...restaurant.starterMenu, ...restaurant.mainMenu];
@@ -311,3 +312,29 @@ for (const [i, el] of menu.entries()) {
 }
 
 // console.log([...menu.entries()]);
+*/
+
+///////////////////////////////////////
+// ES6 enhanced object literals
+const catBodyParts = {
+  paws: 4,
+  tail: 'long',
+  head: 1,
+};
+
+const powerAttacks = ['fire breath', 'frost breath', 'plasma ray'];
+const [, frostBreathAtk] = powerAttacks;
+console.log(frostBreathAtk);
+
+const catPesho = {
+  firstName: 'Pesho',
+  age: 3,
+  catBodyParts,
+  weight: 5,
+  powerRoar() {
+    return 'Meow Meow';
+  },
+  [powerAttacks[0]]: 55,
+};
+
+console.log(catPesho);
