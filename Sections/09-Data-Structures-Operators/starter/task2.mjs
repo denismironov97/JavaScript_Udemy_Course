@@ -74,7 +74,15 @@ for (const player of gameDeepCopy.scored) {
 */
 
 for (const player of gameDeepCopy.scored) {
+  scores[player] && scores[player]++;
+  scores[player] = scores[player] ?? 1;
+}
+
+/*
+for (const player of gameDeepCopy.scored) {
+  //bool              if true               else
   scores[player] ? scores[player]++ : (scores[player] = 1);
 }
+*/
 
 console.log(scores);
