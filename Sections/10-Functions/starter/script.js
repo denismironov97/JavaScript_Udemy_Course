@@ -1,5 +1,6 @@
 'use strict';
 
+/*
 ///////////////////////////////////////
 // Default Parameters
 const bookings = [];
@@ -91,3 +92,33 @@ const high5 = function () {
 };
 document.body.addEventListener('click', high5);
 ['Jonas', 'Martha', 'Adam'].forEach(high5);
+*/
+
+//Build higher order functions-examples!
+//Calculator and lower order funcs be the sub operators as addition, subtraction, multiplication, division
+
+const subtract = function (nums) {
+  let difference = nums.shift();
+  for (const number of nums) {
+    difference -= number;
+  }
+
+  return difference;
+};
+
+const add = function (nums) {
+  let sum = 0;
+  for (const number of nums) {
+    sum += number;
+  }
+
+  return sum;
+};
+
+const calculatorOperator = function (funcArg, ...variables) {
+  const result = funcArg(variables);
+  return result;
+};
+
+console.log(calculatorOperator(add, 4, 5, 1));
+console.log(calculatorOperator(subtract, 4, 5, 1));
