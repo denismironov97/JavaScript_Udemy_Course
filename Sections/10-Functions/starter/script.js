@@ -141,3 +141,12 @@ greet('Hello')('Jonas');
 const greetArr = greeting => name => console.log(`${greeting} ${name}`);
 
 greetArr('Hi')('Jonas');
+
+//Challenge
+const greetArrowFunc = greeting => {
+  return name => {
+    console.log(`${greeting} - ${name}`);
+  };
+};
+
+greetArrowFunc('Hello there')('Denis');
