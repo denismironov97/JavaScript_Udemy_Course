@@ -72,5 +72,46 @@ const currencies = new Map([
 ]);
 
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
-
 /////////////////////////////////////////////////
+
+//--------------------------------------------------------------------------------------------
+
+const displayMovements = function (movements) {
+  [...containerMovements.children].forEach(value => value.remove());
+
+  movements.forEach((currValue, currIndex) => {
+    const movementRowEl = createMovementRow(
+      currValue,
+      currIndex,
+      'placeholder date'
+    );
+    containerMovements.prepend(movementRowEl);
+  });
+
+  function createMovementRow(value, index, date) {
+    const typeOperation = value > 0 ? 'deposit' : 'withdrawal';
+    const typeOperationEl = document.createElement('div');
+    typeOperationEl.textContent = `${index + 1} ${typeOperation}`;
+    typeOperationEl.classList.add(
+      `movements__type--${typeOperation}`,
+      'movements__type'
+    );
+
+    const movementsDateEl = document.createElement('div');
+    movementsDateEl.textContent = date;
+    movementsDateEl.classList.add('movements__date');
+
+    const movementsValueEl = document.createElement('div');
+    movementsValueEl.textContent = `${value}€`;
+    movementsValueEl.classList.add('movements__value');
+
+    const movementRowEl = document.createElement('div');
+    movementRowEl.classList.add('movements__row');
+
+    movementRowEl.append(typeOperationEl, movementsDateEl, movementsValueEl);
+
+    return movementRowEl;
+  }
+};
+
+displayMovements(movements);
