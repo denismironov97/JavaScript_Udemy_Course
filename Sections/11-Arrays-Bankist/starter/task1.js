@@ -17,7 +17,7 @@ GOOD LUCK 😀
 */
 
 'use strict';
-
+/*
 const checkDogs = function (dogAgesArrOne, dogsAgesArrTwo) {
   const dogsJuliaFixed = dogAgesArrOne.slice();
   dogsJuliaFixed.splice(0, 2);
@@ -27,6 +27,32 @@ const checkDogs = function (dogAgesArrOne, dogsAgesArrTwo) {
   dogsJuliaFixed.forEach(determineAge);
   stringB.push(`${'-'.padEnd(45, '-')}\n`);
   dogsAgesArrTwo.forEach(determineAge);
+
+  return stringB.join('');
+
+  function determineAge(value, index) {
+    const stringMessage =
+      value >= 3
+        ? `Dog number ${index + 1} is an adult, and is ${value} years old`
+        : `Dog number ${index + 1} is still a puppy 🐶`;
+    stringB.push(`${stringMessage}\n`);
+  }
+};
+
+const dogsJulia = [3, 5, 2, 12, 7];
+const dogsKate = [4, 1, 15, 8, 3];
+
+console.log(checkDogs(dogsJulia, dogsKate));
+*/
+
+const checkDogs = function (dogAgesArrOne, dogsAgesArrTwo) {
+  const dogsJuliaFixed = dogAgesArrOne.slice();
+  dogsJuliaFixed.splice(0, 2);
+  dogsJuliaFixed.splice(-2);
+
+  const stringB = [];
+  const dogsAgesArr = dogsJuliaFixed.concat(dogsAgesArrTwo);
+  dogsAgesArr.forEach(determineAge);
 
   return stringB.join('');
 
