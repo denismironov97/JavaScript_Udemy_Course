@@ -124,3 +124,14 @@ displayMovements(movements);
     acc.username = ownerInitials;
   });
 })(accounts);
+
+//Deposits
+
+const deposits = movements.filter(function (currMovementValue) {
+  return currMovementValue > 0;
+});
+
+const withdrawals = movements.filter(currValue => currValue < 0);
+
+console.log(deposits);
+console.log(withdrawals);
