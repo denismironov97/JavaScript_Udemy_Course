@@ -113,7 +113,6 @@ const displayMovements = function (movements) {
     return movementRowEl;
   }
 };
-
 displayMovements(movements);
 
 //IIFE example
@@ -133,5 +132,21 @@ const deposits = movements.filter(function (currMovementValue) {
 
 const withdrawals = movements.filter(currValue => currValue < 0);
 
-console.log(deposits);
-console.log(withdrawals);
+//Reduce Method Example
+/*------------------------------------------------------------------------------*/
+const customReducerCallbackFn = function (
+  accumulator,
+  currValue,
+  currIndex,
+  arrReference
+) {
+  return accumulator + currValue;
+};
+
+const totalUserBalance = movements.reduce(customReducerCallbackFn, 0);
+/*------------------------------------------------------------------------------*/
+
+const displayUserBalance = function (totalBalance, labelBalanceElem) {
+  labelBalanceElem.textContent = `${totalBalance}€`;
+};
+displayUserBalance(totalUserBalance, labelBalance);
