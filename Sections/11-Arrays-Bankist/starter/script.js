@@ -115,3 +115,12 @@ const displayMovements = function (movements) {
 };
 
 displayMovements(movements);
+
+//IIFE example
+(function createUsernames(accountsDataArr) {
+  const regex = /[A-Z]/g;
+  accountsDataArr.forEach(function (acc) {
+    const ownerInitials = acc.owner.match(regex).join('').toLowerCase();
+    acc.username = ownerInitials;
+  });
+})(accounts);
