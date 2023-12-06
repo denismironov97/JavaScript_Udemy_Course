@@ -124,8 +124,40 @@ displayMovements(movements);
   });
 })(accounts);
 
-//Deposits
+const calcDisplaySummary = function (movements) {
+  const totalDeposits = movements
+    .filter(currMovementValue => currMovementValue > 0)
+    .reduce((acc, currValue) => {
+      return acc + currValue;
+    }, 0);
 
+  labelSumIn.textContent = `${totalDeposits}€`;
+
+  const totalWithdraws = movements
+    .filter(currMovementValue => currMovementValue < 0)
+    .reduce((acc, currValue) => {
+      return acc + currValue;
+    }, 0);
+
+  labelSumOut.textContent = `${Math.abs(totalWithdraws)}€`;
+
+  const totalInterest = movements
+    .filter(currVal => currVal > 0)
+    .map(currVal => {
+      return (currVal * 1.2) / 100;
+    })
+    .filter(currVal => currVal >= 1)
+    .reduce((acc, currValue) => {
+      return acc + currValue;
+    }, 0);
+
+  labelSumInterest.textContent = `${totalInterest.toFixed(2)}€`;
+};
+calcDisplaySummary(movements);
+
+//Array methods
+/*------------------------------------------------------------------------------*/
+//Deposits
 const deposits = movements.filter(function (currMovementValue) {
   return currMovementValue > 0;
 });
@@ -150,3 +182,9 @@ const displayUserBalance = function (totalBalance, labelBalanceElem) {
   labelBalanceElem.textContent = `${totalBalance}€`;
 };
 displayUserBalance(totalUserBalance, labelBalance);
+
+const eurToUsd = 1.1;
+const totalDepositsUSD = movements
+  .filter(currMovementValue => currMovementValue > 0)
+  .map(currValue => currValue * eurToUsd)
+  .reduce((acc, currValue) => acc + currValue, 0);
