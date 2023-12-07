@@ -33,7 +33,14 @@ const account4 = {
   pin: 4444,
 };
 
-const accounts = [account1, account2, account3, account4];
+const accountTest = {
+  owner: 'Just Test',
+  movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30, 99999],
+  interestRate: 1,
+  pin: 123,
+};
+
+const accounts = [account1, account2, account3, account4, accountTest];
 
 // Elements
 const labelWelcome = document.querySelector('.welcome');
@@ -76,7 +83,39 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 //--------------------------------------------------------------------------------------------
 
-const displayMovements = function (movements) {
+let loggedUSer;
+btnLogin.addEventListener('click', function (event) {
+  event.preventDefault();
+
+  const [userInputEl, passwordInputEl] = [
+    ...event.target.parentElement.children,
+  ];
+
+  loggedUSer = accounts.find(
+    acc =>
+      acc.username === userInputEl.value &&
+      acc.pin === Number(passwordInputEl.value)
+  );
+
+  if (loggedUSer) {
+    containerApp.style.opacity = 1;
+    displayMovements(loggedUSer);
+    calcDisplaySummary(loggedUSer);
+    displayCurrentBalance(loggedUSer);
+    displayWelcomeMessage();
+  }
+
+  userInputEl.value = passwordInputEl.value = '';
+
+  //Remove focus on element after login
+  passwordInputEl.blur();
+});
+
+const displayWelcomeMessage = function () {
+  labelWelcome.textContent = `Welcome ${loggedUSer.owner}.`;
+};
+
+const displayMovements = function ({ movements }) {
   [...containerMovements.children].forEach(value => value.remove());
 
   movements.forEach((currValue, currIndex) => {
@@ -113,7 +152,7 @@ const displayMovements = function (movements) {
     return movementRowEl;
   }
 };
-displayMovements(movements);
+//displayMovements(movements);
 
 //IIFE example
 (function createUsernames(accountsDataArr) {
@@ -124,7 +163,7 @@ displayMovements(movements);
   });
 })(accounts);
 
-const calcDisplaySummary = function (movements) {
+const calcDisplaySummary = function ({ movements, interestRate }) {
   const totalDeposits = movements
     .filter(currMovementValue => currMovementValue > 0)
     .reduce((acc, currValue) => {
@@ -144,7 +183,7 @@ const calcDisplaySummary = function (movements) {
   const totalInterest = movements
     .filter(currVal => currVal > 0)
     .map(currVal => {
-      return (currVal * 1.2) / 100;
+      return (currVal * interestRate) / 100;
     })
     .filter(currVal => currVal >= 1)
     .reduce((acc, currValue) => {
@@ -153,7 +192,15 @@ const calcDisplaySummary = function (movements) {
 
   labelSumInterest.textContent = `${totalInterest.toFixed(2)}€`;
 };
-calcDisplaySummary(movements);
+//calcDisplaySummary(movements);
+
+const displayCurrentBalance = function ({ movements }) {
+  const totalBalance = movements.reduce(function (acc, currValue) {
+    return acc + currValue;
+  });
+
+  labelBalance.textContent = `${totalBalance}€`;
+};
 
 //Array methods
 /*------------------------------------------------------------------------------*/
@@ -175,13 +222,14 @@ const customReducerCallbackFn = function (
   return accumulator + currValue;
 };
 
-const totalUserBalance = movements.reduce(customReducerCallbackFn, 0);
+//const totalUserBalance = movements.reduce(customReducerCallbackFn, 0);
 /*------------------------------------------------------------------------------*/
-
+/* 
 const displayUserBalance = function (totalBalance, labelBalanceElem) {
   labelBalanceElem.textContent = `${totalBalance}€`;
 };
 displayUserBalance(totalUserBalance, labelBalance);
+*/
 
 const eurToUsd = 1.1;
 const totalDepositsUSD = movements
