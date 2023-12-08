@@ -68,6 +68,8 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
+const transferFormElem = document.querySelector('.form--transfer');
+
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
@@ -82,8 +84,14 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 /////////////////////////////////////////////////
 
 //--------------------------------------------------------------------------------------------
-
 let loggedUSer;
+
+const updateUI = function (currAccount) {
+  displayMovements(currAccount);
+  calcDisplaySummary(currAccount);
+  displayCurrentBalance(currAccount);
+};
+
 btnLogin.addEventListener('click', function (event) {
   event.preventDefault();
 
@@ -99,9 +107,7 @@ btnLogin.addEventListener('click', function (event) {
 
   if (loggedUSer) {
     containerApp.style.opacity = 1;
-    displayMovements(loggedUSer);
-    calcDisplaySummary(loggedUSer);
-    displayCurrentBalance(loggedUSer);
+    updateUI(loggedUSer);
     displayWelcomeMessage();
   }
 
@@ -110,6 +116,52 @@ btnLogin.addEventListener('click', function (event) {
   //Remove focus on element after login
   passwordInputEl.blur();
 });
+
+const transferMoney = function (event) {
+  event.preventDefault();
+
+  const formData = new FormData(transferFormElem);
+  let [usernameToTransfer, transferAmount] = [...formData.values()];
+  transferAmount = Number(transferAmount);
+
+  const transferAccount = accounts.find(accObj => {
+    return accObj.username === usernameToTransfer;
+  });
+
+  let errFlag = false;
+  //Check if user is trying to send amount to him/her-self
+  if (loggedUSer.username === usernameToTransfer) {
+    errFlag = true;
+    alert('Cannot transfer money to yourself!');
+  }
+  //Check if user is trying to send amount to nonexistent user
+  else if (!transferAccount) {
+    errFlag = true;
+    alert('No such account exists.');
+  }
+  //Check if user is trying to send negative amount
+  else if (transferAmount <= 0) {
+    errFlag = true;
+    alert('Transfer amount must be a positive value or diff from 0.');
+  }
+  //Check if user is trying to send amount more than his/hers balance
+  else if (transferAmount > loggedUSer.balance) {
+    errFlag = true;
+    alert('Transfer amount must less than current balance.');
+  }
+
+  if (errFlag) {
+    return transferFormElem.reset();
+  }
+
+  loggedUSer.movements.push(transferAmount * -1);
+  transferAccount.movements.push(transferAmount);
+
+  updateUI(loggedUSer);
+
+  transferFormElem.reset();
+};
+btnTransfer.addEventListener('click', transferMoney);
 
 const displayWelcomeMessage = function () {
   labelWelcome.textContent = `Welcome ${loggedUSer.owner}.`;
@@ -194,10 +246,12 @@ const calcDisplaySummary = function ({ movements, interestRate }) {
 };
 //calcDisplaySummary(movements);
 
-const displayCurrentBalance = function ({ movements }) {
-  const totalBalance = movements.reduce(function (acc, currValue) {
+const displayCurrentBalance = function (useAccObj) {
+  const totalBalance = useAccObj.movements.reduce(function (acc, currValue) {
     return acc + currValue;
   });
+
+  useAccObj.balance = totalBalance;
 
   labelBalance.textContent = `${totalBalance}€`;
 };
