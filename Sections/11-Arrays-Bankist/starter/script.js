@@ -256,6 +256,37 @@ const displayCurrentBalance = function (useAccObj) {
   labelBalance.textContent = `${totalBalance}€`;
 };
 
+const requestLoan = function (event) {
+  event.preventDefault();
+
+  const requestAmount = Number(inputLoanAmount.value);
+
+  if (requestAmount <= 0) {
+    return alert('Can not request negative or 0 amount.');
+  }
+
+  const minimumAmount = (10 / 100) * requestAmount; // 10% of the requestAmount
+
+  const isAccEligibleForLoan = loggedUserAccount.movements.some(currAmount => {
+    return currAmount > minimumAmount;
+  });
+
+  if (!isAccEligibleForLoan) {
+    return alert('You are not eligible for loan');
+  }
+
+  inputLoanAmount.blur();
+  inputLoanAmount.value = '';
+
+  loggedUserAccount.movements.push(requestAmount);
+
+  //Update UI
+  updateUI(loggedUserAccount);
+};
+btnLoan.addEventListener('click', requestLoan);
+//const btnLoan = document.querySelector('.form__btn--loan');
+//const inputLoanAmount = document.querySelector('.form__input--loan-amount');
+
 const deleteAccount = function (event) {
   event.preventDefault();
   const closeFormElem = document.querySelector('.operation--close form');
