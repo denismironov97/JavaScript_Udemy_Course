@@ -28,7 +28,56 @@ const account4 = {
 };
 
 const accounts = [account1, account2, account3, account4];
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
 /*
+// Simple Array Methods
+let arr = ['a', 'b', 'c', 'd', 'e'];
+
+// SLICE
+console.log(arr.slice(2));
+console.log(arr.slice(2, 4));
+console.log(arr.slice(-2));
+console.log(arr.slice(-1));
+console.log(arr.slice(1, -2));
+console.log(arr.slice());
+console.log([...arr]);
+
+// SPLICE
+// console.log(arr.splice(2));
+arr.splice(-1);
+console.log(arr);
+arr.splice(1, 2);
+console.log(arr);
+
+// REVERSE
+arr = ['a', 'b', 'c', 'd', 'e'];
+const arr2 = ['j', 'i', 'h', 'g', 'f'];
+console.log(arr2.reverse());
+console.log(arr2);
+
+// CONCAT
+const letters = arr.concat(arr2);
+console.log(letters);
+console.log([...arr, ...arr2]);
+
+// JOIN
+console.log(letters.join(' - '));
+
+///////////////////////////////////////
+// The new at Method
+const arr = [23, 11, 64];
+console.log(arr[0]);
+console.log(arr.at(0));
+
+// getting last array element
+console.log(arr[arr.length - 1]);
+console.log(arr.slice(-1)[0]);
+console.log(arr.at(-1));
+
+console.log('jonas'.at(0));
+console.log('jonas'.at(-1));
+
 ///////////////////////////////////////
 // Looping Arrays: forEach
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
@@ -54,7 +103,6 @@ movements.forEach(function (mov, i, arr) {
 // 1: function(450)
 // 2: function(400)
 // ...
-
 
 ///////////////////////////////////////
 // forEach With Maps and Sets
@@ -86,7 +134,7 @@ const eurToUsd = 1.1;
 //   return mov * eurToUsd;
 // });
 
-const movementsUSD = movements.map((mov) => mov * eurToUsd);
+const movementsUSD = movements.map(mov => mov * eurToUsd);
 
 console.log(movements);
 console.log(movementsUSD);
@@ -102,13 +150,11 @@ const movementsDescriptions = movements.map(
     )}`
 );
 console.log(movementsDescriptions);
-*/
+
 
 ///////////////////////////////////////
 // The filter Method
-const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
-
-const deposits = movements.filter(function (mov, index, arr) {
+const deposits = movements.filter(function (mov, i, arr) {
   return mov > 0;
 });
 console.log(movements);
@@ -118,8 +164,9 @@ const depositsFor = [];
 for (const mov of movements) if (mov > 0) depositsFor.push(mov);
 console.log(depositsFor);
 
-const withdrawals = movements.filter((mov) => mov < 0);
+const withdrawals = movements.filter(mov => mov < 0);
 console.log(withdrawals);
+
 
 ///////////////////////////////////////
 // The reduce Method
@@ -143,7 +190,9 @@ const max = movements.reduce((acc, mov) => {
   else return mov;
 }, movements[0]);
 console.log(max);
+*/
 
+/*
 ///////////////////////////////////////
 // The Magic of Chaining Methods
 const eurToUsd = 1.1;
@@ -151,7 +200,7 @@ console.log(movements);
 
 // PIPELINE
 const totalDepositsUSD = movements
-  .filter((mov) => mov > 0)
+  .filter(mov => mov > 0)
   .map((mov, i, arr) => {
     // console.log(arr);
     return mov * eurToUsd;
@@ -159,6 +208,7 @@ const totalDepositsUSD = movements
   // .map(mov => mov * eurToUsd)
   .reduce((acc, mov) => acc + mov, 0);
 console.log(totalDepositsUSD);
+*/
 
 ///////////////////////////////////////
 // The find Method
@@ -170,3 +220,6 @@ console.log(accounts);
 
 const account = accounts.find((acc) => acc.owner === 'Jessica Davis');
 console.log(account);
+
+///////////////////////////////////////
+//The findIndex Method
