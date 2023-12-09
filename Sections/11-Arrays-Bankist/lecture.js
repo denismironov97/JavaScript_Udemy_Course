@@ -223,3 +223,11 @@ console.log(account);
 
 ///////////////////////////////////////
 //The findIndex Method
+const specificIndex = accounts.findIndex(function (
+  currValue,
+  currIndex,
+  arrReference
+) {
+  return currValue.owner === 'Jessica Davis';
+});
+//Returns index if element is present in arr, otherwise returns -1 if not.
