@@ -84,7 +84,7 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 /////////////////////////////////////////////////
 
 //--------------------------------------------------------------------------------------------
-let loggedUSer;
+let loggedUserAccount;
 
 const updateUI = function (currAccount) {
   displayMovements(currAccount);
@@ -99,15 +99,15 @@ btnLogin.addEventListener('click', function (event) {
     ...event.target.parentElement.children,
   ];
 
-  loggedUSer = accounts.find(
+  loggedUserAccount = accounts.find(
     acc =>
       acc.username === userInputEl.value &&
       acc.pin === Number(passwordInputEl.value)
   );
 
-  if (loggedUSer) {
+  if (loggedUserAccount) {
     containerApp.style.opacity = 1;
-    updateUI(loggedUSer);
+    updateUI(loggedUserAccount);
     displayWelcomeMessage();
   }
 
@@ -130,7 +130,7 @@ const transferMoney = function (event) {
 
   let errFlag = false;
   //Check if user is trying to send amount to him/her-self
-  if (loggedUSer.username === usernameToTransfer) {
+  if (loggedUserAccount.username === usernameToTransfer) {
     errFlag = true;
     alert('Cannot transfer money to yourself!');
   }
@@ -145,7 +145,7 @@ const transferMoney = function (event) {
     alert('Transfer amount must be a positive value or diff from 0.');
   }
   //Check if user is trying to send amount more than his/hers balance
-  else if (transferAmount > loggedUSer.balance) {
+  else if (transferAmount > loggedUserAccount.balance) {
     errFlag = true;
     alert('Transfer amount must less than current balance.');
   }
@@ -154,17 +154,17 @@ const transferMoney = function (event) {
     return transferFormElem.reset();
   }
 
-  loggedUSer.movements.push(transferAmount * -1);
+  loggedUserAccount.movements.push(transferAmount * -1);
   transferAccount.movements.push(transferAmount);
 
-  updateUI(loggedUSer);
+  updateUI(loggedUserAccount);
 
   transferFormElem.reset();
 };
 btnTransfer.addEventListener('click', transferMoney);
 
 const displayWelcomeMessage = function () {
-  labelWelcome.textContent = `Welcome ${loggedUSer.owner}.`;
+  labelWelcome.textContent = `Welcome ${loggedUserAccount.owner}.`;
 };
 
 const displayMovements = function ({ movements }) {
@@ -255,6 +255,35 @@ const displayCurrentBalance = function (useAccObj) {
 
   labelBalance.textContent = `${totalBalance}€`;
 };
+
+const deleteAccount = function (event) {
+  event.preventDefault();
+  const closeFormElem = document.querySelector('.operation--close form');
+
+  const indexOfAccountUser = accounts.findIndex(acc => {
+    return acc.username === inputCloseUsername.value;
+  });
+
+  if (
+    indexOfAccountUser === -1 ||
+    Number(inputClosePin.value) !== loggedUserAccount.pin
+  ) {
+    closeFormElem.reset();
+    alert('Error invalid username or pin!');
+    return;
+  }
+
+  const removedUserAccount = accounts.splice(indexOfAccountUser, 1).at(0);
+  console.log(removedUserAccount);
+
+  //Resets the input fields of form element
+  inputClosePin.blur();
+  closeFormElem.reset();
+};
+btnClose.addEventListener('click', deleteAccount);
+//const btnClose = document.querySelector('.form__btn--close');
+//const inputCloseUsername = document.querySelector('.form__input--user');
+//const inputClosePin = document.querySelector('.form__input--pin');
 
 //Array methods
 /*------------------------------------------------------------------------------*/
