@@ -231,3 +231,20 @@ const specificIndex = accounts.findIndex(function (
   return currValue.owner === 'Jessica Davis';
 });
 //Returns index if element is present in arr, otherwise returns -1 if not.
+
+///////////////////////////////////////
+// some and every
+console.log(movements);
+
+// EQUALITY
+console.log(movements.includes(-130));
+
+// SOME: CONDITION
+console.log(movements.some((mov) => mov === -130));
+
+const anyDeposits = movements.some((mov) => mov > 0);
+console.log(anyDeposits);
+
+// EVERY: CONDITION
+console.log(movements.every((mov) => mov > 0));
+console.log(account4.movements.every((mov) => mov > 0));
