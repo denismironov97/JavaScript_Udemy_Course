@@ -210,6 +210,7 @@ const totalDepositsUSD = movements
 console.log(totalDepositsUSD);
 */
 
+/*
 ///////////////////////////////////////
 // The find Method
 const firstWithdrawal = movements.find((mov) => mov < 0);
@@ -248,3 +249,60 @@ console.log(anyDeposits);
 // EVERY: CONDITION
 console.log(movements.every((mov) => mov > 0));
 console.log(account4.movements.every((mov) => mov > 0));
+
+///////////////////////////////////////
+// flat and flatMap
+const arr = [[1, 2, 3], [4, 5, 6], 7, 8];
+console.log(arr.flat());
+
+const arrDeep = [[[1, 2], 3], [4, [5, 6]], 7, 8];
+console.log(arrDeep.flat(2));
+
+// flat
+const overalBalance = accounts
+  .map((acc) => acc.movements)
+  .flat()
+  .reduce((acc, mov) => acc + mov, 0);
+console.log(overalBalance);
+
+// flatMap
+const overalBalance2 = accounts
+  .flatMap((acc) => acc.movements)
+  .reduce((acc, mov) => acc + mov, 0);
+console.log(overalBalance2);
+*/
+
+///////////////////////////////////////
+// Sorting Arrays
+
+// Strings
+const owners = ['Jonas', 'Zach', 'Adam', 'Martha'];
+//console.log(owners.sort());
+//console.log(owners);
+
+// Numbers
+//console.log(movements);
+
+// Ascending
+movements.sort((a, b) => {
+  if (a > b) {
+    return 1;
+  }
+  if (a < b) {
+    return -1;
+  }
+});
+//movements.sort((a, b) => a - b);
+console.log(`Ascending order: ${movements.join(', ')}`);
+
+// Descending
+movements.sort((a, b) => {
+  if (a > b) {
+    return -1;
+  }
+  if (a < b) {
+    return 1;
+  }
+});
+//movements.sort((a, b) => b - a);
+console.log(`Descending order: ${movements.join(', ')}`);
