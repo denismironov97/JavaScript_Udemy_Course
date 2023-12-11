@@ -86,6 +86,15 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 //--------------------------------------------------------------------------------------------
 let loggedUserAccount;
 
+//IIFE example
+(function createUsernames(accountsDataArr) {
+  const regex = /[A-Z]/g;
+  accountsDataArr.forEach(function (acc) {
+    const ownerInitials = acc.owner.match(regex).join('').toLowerCase();
+    acc.username = ownerInitials;
+  });
+})(accounts);
+
 const updateUI = function (currAccount) {
   displayMovements(currAccount);
   calcDisplaySummary(currAccount);
@@ -159,6 +168,7 @@ const transferMoney = function (event) {
 
   updateUI(loggedUserAccount);
 
+  inputTransferAmount.blur();
   transferFormElem.reset();
 };
 btnTransfer.addEventListener('click', transferMoney);
@@ -167,17 +177,36 @@ const displayWelcomeMessage = function () {
   labelWelcome.textContent = `Welcome ${loggedUserAccount.owner}.`;
 };
 
-const displayMovements = function ({ movements }) {
+const displayMovements = function ({ movements }, sortedStateFlag = false) {
   [...containerMovements.children].forEach(value => value.remove());
 
-  movements.forEach((currValue, currIndex) => {
+  const sortedMovements = sortedStateFlag
+    ? movements.slice().sort(orderByDescending)
+    : movements;
+
+  console.log(sortedMovements);
+
+  sortedMovements.forEach((currValue, currIndex) => {
     const movementRowEl = createMovementRow(
       currValue,
       currIndex,
       'placeholder date'
     );
-    containerMovements.prepend(movementRowEl);
+
+    if (sortedStateFlag) {
+      containerMovements.append(movementRowEl);
+    } else {
+      containerMovements.prepend(movementRowEl);
+    }
   });
+
+  function orderByDescending(a, b) {
+    if (a > b) {
+      return -1;
+    } else {
+      return 1;
+    }
+  }
 
   function createMovementRow(value, index, date) {
     const typeOperation = value > 0 ? 'deposit' : 'withdrawal';
@@ -206,14 +235,14 @@ const displayMovements = function ({ movements }) {
 };
 //displayMovements(movements);
 
-//IIFE example
-(function createUsernames(accountsDataArr) {
-  const regex = /[A-Z]/g;
-  accountsDataArr.forEach(function (acc) {
-    const ownerInitials = acc.owner.match(regex).join('').toLowerCase();
-    acc.username = ownerInitials;
-  });
-})(accounts);
+let isSortedState = false;
+const sortMovementsByDescending = function (event) {
+  event.preventDefault();
+
+  displayMovements(loggedUserAccount, !isSortedState);
+  isSortedState = !isSortedState;
+};
+btnSort.addEventListener('click', sortMovementsByDescending);
 
 const calcDisplaySummary = function ({ movements, interestRate }) {
   const totalDeposits = movements
