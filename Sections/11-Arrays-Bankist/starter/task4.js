@@ -158,6 +158,10 @@ function isDogFedOkay(currDog) {
   );
 }
 
+const isDogFedOkayArrow = currDog =>
+  currDog.curFood > currDog.recommendedFood * 0.9 &&
+  currDog.curFood < currDog.recommendedFood * 1.1;
+
 //console.log(isThereOkFedDog);
 
 //7)
