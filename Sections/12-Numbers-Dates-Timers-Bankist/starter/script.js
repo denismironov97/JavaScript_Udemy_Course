@@ -49,7 +49,32 @@ const account2 = {
   locale: 'en-US',
 };
 
-const accounts = [account1, account2];
+const accTest = {
+  owner: 'Just Test',
+  movements: [
+    5000, 3400, -150, -790, -3210, -1000, 8500, -30, 1300, 40_000, 400_000,
+  ],
+  interestRate: 1.5,
+  pin: 123,
+
+  movementsDates: [
+    '2019-11-01T13:15:33.035Z',
+    '2019-11-30T09:48:16.867Z',
+    '2019-12-25T06:04:23.907Z',
+    '2020-01-25T14:18:46.235Z',
+    '2020-02-05T16:33:06.386Z',
+    '2020-04-10T14:43:26.374Z',
+    '2020-06-25T18:49:59.371Z',
+    '2023-12-15T12:01:20.894Z',
+    '2023-12-12T09:01:20.894Z',
+    '2023-12-13T15:01:20.894Z',
+    '2023-12-14T13:01:20.894Z',
+  ],
+  currency: 'USD',
+  locale: 'en-US',
+};
+
+const accounts = [account1, account2, accTest];
 
 /////////////////////////////////////////////////
 // Elements
@@ -80,6 +105,40 @@ const inputClosePin = document.querySelector('.form__input--pin');
 
 /////////////////////////////////////////////////
 // Functions
+
+const formatMovementDate = function (dateObj) {
+  const calcDaysPassed = (dateObj1, dateObj2) =>
+    Math.round(Math.abs(dateObj1 - dateObj2) / (1000 * 60 * 60 * 24));
+
+  const nowDate = new Date();
+  const daysPassed = calcDaysPassed(dateObj, nowDate);
+
+  let dateStrFormat;
+  switch (daysPassed) {
+    case 0:
+      dateStrFormat = 'Today';
+      break;
+    case 1:
+      dateStrFormat = 'Yesterday';
+      break;
+    case 2:
+      dateStrFormat = 'Two days ago';
+      break;
+    case 3:
+      dateStrFormat = 'Three days ago';
+      break;
+
+    default:
+      const date = String(dateObj.getDate()).padStart(2, '0');
+      const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const year = dateObj.getFullYear();
+      dateStrFormat = `${date}/${month}/${year}`;
+      break;
+  }
+
+  return dateStrFormat;
+};
+
 const addDateToMovementOperation = function (
   dateStrFormat = new Date().toISOString(),
   currentAccount,
@@ -103,16 +162,14 @@ const displayMovements = function (
     const movFixed = currMov.toFixed(2);
 
     const dateObj = new Date(movementsDates[index]);
-    const date = String(dateObj.getDate()).padStart(2, '0');
-    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-    const year = dateObj.getFullYear();
+    const dateStrFormat = formatMovementDate(dateObj);
 
     const html = `
       <div class="movements__row">
         <div class="movements__type movements__type--${type}">${
       index + 1
     } ${type}</div>
-        <div class="movements__date">${date}/${month}/${year}</div>
+        <div class="movements__date">${dateStrFormat}</div>
         <div class="movements__value">${movFixed}€</div>
       </div>
     `;
@@ -280,7 +337,7 @@ btnSort.addEventListener('click', function (e) {
 });
 
 //Forced logged user
-currentAccount = accounts[0];
+currentAccount = accounts.at(-1);
 updateUI(currentAccount);
 containerApp.style.opacity = 1;
 
