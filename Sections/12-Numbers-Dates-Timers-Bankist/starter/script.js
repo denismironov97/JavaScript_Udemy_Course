@@ -80,22 +80,39 @@ const inputClosePin = document.querySelector('.form__input--pin');
 
 /////////////////////////////////////////////////
 // Functions
+const addDateToMovementOperation = function (
+  dateStrFormat = new Date().toISOString(),
+  currentAccount,
+  receiverAcc = undefined
+) {
+  currentAccount.movementsDates.push(dateStrFormat);
+  receiverAcc?.movementsDates.push(dateStrFormat);
+};
 
-const displayMovements = function (movements, sort = false) {
+const displayMovements = function (
+  { movements, movementsDates },
+  sort = false
+) {
   containerMovements.innerHTML = '';
 
   const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
 
-  movs.forEach(function (mov, i) {
-    const type = mov > 0 ? 'deposit' : 'withdrawal';
+  movs.forEach(function (currMov, index) {
+    const type = currMov > 0 ? 'deposit' : 'withdrawal';
 
-    const movFixed = mov.toFixed(2);
+    const movFixed = currMov.toFixed(2);
+
+    const dateObj = new Date(movementsDates[index]);
+    const date = String(dateObj.getDate()).padStart(2, '0');
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const year = dateObj.getFullYear();
 
     const html = `
       <div class="movements__row">
         <div class="movements__type movements__type--${type}">${
-      i + 1
+      index + 1
     } ${type}</div>
+        <div class="movements__date">${date}/${month}/${year}</div>
         <div class="movements__value">${movFixed}€</div>
       </div>
     `;
@@ -144,7 +161,7 @@ createUsernames(accounts);
 
 const updateUI = function (acc) {
   // Display movements
-  displayMovements(acc.movements);
+  displayMovements(acc);
 
   // Display balance
   calcDisplayBalance(acc);
@@ -164,7 +181,7 @@ btnLogin.addEventListener('click', function (e) {
   currentAccount = accounts.find(
     acc => acc.username === inputLoginUsername.value
   );
-  console.log(currentAccount);
+  //console.log(currentAccount);
 
   if (currentAccount?.pin === Number(inputLoginPin.value)) {
     // Display UI and message
@@ -200,6 +217,14 @@ btnTransfer.addEventListener('click', function (e) {
     currentAccount.movements.push(-amount);
     receiverAcc.movements.push(amount);
 
+    //Adding date
+    const currDateStringFormat = new Date().toISOString();
+    addDateToMovementOperation(
+      currDateStringFormat,
+      currentAccount,
+      receiverAcc
+    );
+
     // Update UI
     updateUI(currentAccount);
   }
@@ -213,6 +238,10 @@ btnLoan.addEventListener('click', function (e) {
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
     // Add movement
     currentAccount.movements.push(amount);
+
+    //Add date info to curr movement transaction
+    const currDateStringFormat = new Date().toISOString();
+    addDateToMovementOperation(currDateStringFormat, currentAccount);
 
     // Update UI
     updateUI(currentAccount);
@@ -230,7 +259,7 @@ btnClose.addEventListener('click', function (e) {
     const index = accounts.findIndex(
       acc => acc.username === currentAccount.username
     );
-    console.log(index);
+    //console.log(index);
     // .indexOf(23)
 
     // Delete account
@@ -246,9 +275,14 @@ btnClose.addEventListener('click', function (e) {
 let sorted = false;
 btnSort.addEventListener('click', function (e) {
   e.preventDefault();
-  displayMovements(currentAccount.movements, !sorted);
+  displayMovements(currentAccount, !sorted);
   sorted = !sorted;
 });
+
+//Forced logged user
+currentAccount = accounts[0];
+updateUI(currentAccount);
+containerApp.style.opacity = 1;
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
