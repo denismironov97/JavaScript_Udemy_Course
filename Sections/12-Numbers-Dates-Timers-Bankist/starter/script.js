@@ -26,7 +26,7 @@ const account1 = {
     '2020-07-12T10:51:36.790Z',
   ],
   currency: 'EUR',
-  locale: 'pt-PT', // de-DE
+  locale: 'de-DE', // de-DE pt-PT
 };
 
 const account2 = {
@@ -71,7 +71,7 @@ const accTest = {
     '2023-12-14T13:01:20.894Z',
   ],
   currency: 'USD',
-  locale: 'en-US',
+  locale: 'jp-JP',
 };
 
 const accounts = [account1, account2, accTest];
@@ -106,7 +106,7 @@ const inputClosePin = document.querySelector('.form__input--pin');
 /////////////////////////////////////////////////
 // Functions
 
-const formatMovementDate = function (dateObj) {
+const formatMovementDate = function (locale, dateObj) {
   const calcDaysPassed = (dateObj1, dateObj2) =>
     Math.round(Math.abs(dateObj1 - dateObj2) / (1000 * 60 * 60 * 24));
 
@@ -129,10 +129,24 @@ const formatMovementDate = function (dateObj) {
       break;
 
     default:
+      /*
       const date = String(dateObj.getDate()).padStart(2, '0');
       const month = String(dateObj.getMonth() + 1).padStart(2, '0');
       const year = dateObj.getFullYear();
       dateStrFormat = `${date}/${month}/${year}`;
+      */
+
+      const configOptions = {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      };
+
+      dateStrFormat = new Intl.DateTimeFormat(locale, configOptions).format(
+        dateObj
+      );
+      // console.log(locale);
+      // console.log(dateStrFormat);
       break;
   }
 
@@ -149,7 +163,7 @@ const addDateToMovementOperation = function (
 };
 
 const displayMovements = function (
-  { movements, movementsDates },
+  { movements, movementsDates, locale },
   sort = false
 ) {
   containerMovements.innerHTML = '';
@@ -162,7 +176,7 @@ const displayMovements = function (
     const movFixed = currMov.toFixed(2);
 
     const dateObj = new Date(movementsDates[index]);
-    const dateStrFormat = formatMovementDate(dateObj);
+    const dateStrFormat = formatMovementDate(locale, dateObj);
 
     const html = `
       <div class="movements__row">
@@ -230,7 +244,7 @@ const updateUI = function (acc) {
 ///////////////////////////////////////
 // Event handlers
 let currentAccount;
-
+//Login acc
 btnLogin.addEventListener('click', function (e) {
   // Prevent form from submitting
   e.preventDefault();
@@ -245,6 +259,23 @@ btnLogin.addEventListener('click', function (e) {
     labelWelcome.textContent = `Welcome back, ${
       currentAccount.owner.split(' ')[0]
     }`;
+
+    //Formatting date and time using internationalization api
+    const nowDate = new Date();
+    const configOptions = {
+      hour: 'numeric',
+      minute: 'numeric',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    };
+    const dateTimeFormat = new Intl.DateTimeFormat(
+      currentAccount.locale,
+      configOptions
+    ).format(nowDate);
+
+    labelDate.textContent = dateTimeFormat;
+
     containerApp.style.opacity = 100;
 
     // Clear input fields
@@ -341,6 +372,18 @@ currentAccount = accounts.at(-1);
 updateUI(currentAccount);
 containerApp.style.opacity = 1;
 
+labelWelcome.textContent = `Welcome back, ${
+  currentAccount.owner.split(' ')[0]
+}`;
+
+//Formatting date and time using internationalization api
+labelDate.textContent = `${new Intl.DateTimeFormat(currentAccount.locale, {
+  hour: 'numeric',
+  minute: 'numeric',
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+}).format(new Date())}`;
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
