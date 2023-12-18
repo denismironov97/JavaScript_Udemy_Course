@@ -170,10 +170,21 @@ const displayMovements = function (
 
   const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
 
+  const options = {
+    style: 'currency',
+    currency: currentAccount.currency,
+  };
+  const numberCurrencyFormatter = new Intl.NumberFormat(
+    currentAccount.locale,
+    options
+  );
+  //console.log(numberCurrencyFormatter);
+
   movs.forEach(function (currMov, index) {
     const type = currMov > 0 ? 'deposit' : 'withdrawal';
 
-    const movFixed = currMov.toFixed(2);
+    const movFixed = numberCurrencyFormatter.format(currMov);
+    // console.log(movFixed);
 
     const dateObj = new Date(movementsDates[index]);
     const dateStrFormat = formatMovementDate(locale, dateObj);
@@ -194,19 +205,19 @@ const displayMovements = function (
 
 const calcDisplayBalance = function (acc) {
   acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `${acc.balance.toFixed(2)}€`;
+  labelBalance.textContent = `${formatterNumberCurrency.format(acc.balance)}`;
 };
 
 const calcDisplaySummary = function (acc) {
   const incomes = acc.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumIn.textContent = `${incomes.toFixed(2)}€`;
+  labelSumIn.textContent = `${formatterNumberCurrency.format(incomes)}`;
 
   const out = acc.movements
     .filter(mov => mov < 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumOut.textContent = `${Math.abs(out).toFixed(2)}€`;
+  labelSumOut.textContent = `${formatterNumberCurrency.format(Math.abs(out))}`;
 
   const interest = acc.movements
     .filter(mov => mov > 0)
@@ -216,10 +227,11 @@ const calcDisplaySummary = function (acc) {
       return int >= 1;
     })
     .reduce((acc, int) => acc + int, 0);
-  labelSumInterest.textContent = `${interest.toFixed(2)}€`;
+  labelSumInterest.textContent = `${formatterNumberCurrency.format(interest)}`;
 };
 
-const createUsernames = function (accs) {
+//IIFE
+(function createUsernames(accs) {
   accs.forEach(function (acc) {
     acc.username = acc.owner
       .toLowerCase()
@@ -227,8 +239,7 @@ const createUsernames = function (accs) {
       .map(name => name[0])
       .join('');
   });
-};
-createUsernames(accounts);
+})(accounts);
 
 const updateUI = function (acc) {
   // Display movements
@@ -369,6 +380,13 @@ btnSort.addEventListener('click', function (e) {
 
 //Forced logged user
 currentAccount = accounts.at(-1);
+
+//Global Scoped
+const formatterNumberCurrency = new Intl.NumberFormat(currentAccount.locale, {
+  style: 'currency',
+  currency: currentAccount.currency,
+});
+
 updateUI(currentAccount);
 containerApp.style.opacity = 1;
 
