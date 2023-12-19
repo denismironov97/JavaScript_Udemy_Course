@@ -195,7 +195,7 @@ const displayMovements = function (
       index + 1
     } ${type}</div>
         <div class="movements__date">${dateStrFormat}</div>
-        <div class="movements__value">${movFixed}€</div>
+        <div class="movements__value">${movFixed}</div>
       </div>
     `;
 
@@ -335,16 +335,37 @@ btnLoan.addEventListener('click', function (e) {
   const amount = Number(inputLoanAmount.value);
 
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
+    /*
+    //Because it's an async function
+    setTimeout(updateUI, 4000, currentAccount);
+
     // Add movement
     currentAccount.movements.push(amount);
 
     //Add date info to curr movement transaction
     const currDateStringFormat = new Date().toISOString();
     addDateToMovementOperation(currDateStringFormat, currentAccount);
+    */
 
+    //Because it's an async function
+    setTimeout(function () {
+      // Add movement
+      currentAccount.movements.push(amount);
+
+      //Add date info to curr movement transaction
+      const currDateStringFormat = new Date().toISOString();
+      addDateToMovementOperation(currDateStringFormat, currentAccount);
+
+      // Update UI
+      updateUI(currentAccount);
+    }, 3000);
+
+    /*
     // Update UI
     updateUI(currentAccount);
+    */
   }
+
   inputLoanAmount.value = '';
 });
 
@@ -402,6 +423,7 @@ labelDate.textContent = `${new Intl.DateTimeFormat(currentAccount.locale, {
   month: 'long',
   year: 'numeric',
 }).format(new Date())}`;
+
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
