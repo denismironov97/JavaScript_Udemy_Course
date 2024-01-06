@@ -106,6 +106,48 @@ const inputClosePin = document.querySelector('.form__input--pin');
 /////////////////////////////////////////////////
 // Functions
 
+let timerInterval;
+function startTimer(amountOfDurationInMs, displayElem) {
+  const oneSecondInterval = 1000;
+
+  let secondsAmount = amountOfDurationInMs / 1000;
+  let secondsRemainder;
+  let minutesAmount;
+  let minutesRemainder;
+  let hoursAmount;
+
+  let secondsString;
+  let minutesString;
+  let hoursString;
+
+  let stringTimerMessage;
+
+  timerInterval = setInterval(() => {
+    secondsRemainder = Math.trunc(secondsAmount % 60); //*
+
+    minutesAmount = secondsAmount / 60;
+    minutesRemainder = Math.trunc(minutesAmount % 60); //*
+
+    hoursAmount = Math.trunc(minutesAmount / 60); //*
+
+    secondsString = secondsRemainder.toString().padStart(2, '0');
+    minutesString = minutesRemainder.toString().padStart(2, '0');
+    hoursString = hoursAmount.toString().padStart(2, '0');
+
+    stringTimerMessage = `${hoursString}h: ${minutesString}min: ${secondsString}sec`;
+
+    displayElem.textContent = stringTimerMessage;
+
+    if (secondsAmount === 0) {
+      labelWelcome.textContent = 'Log in to get started';
+      containerApp.style.opacity = 0;
+      clearInterval(timerInterval);
+    }
+
+    secondsAmount--;
+  }, oneSecondInterval);
+}
+
 const formatMovementDate = function (locale, dateObj) {
   const calcDaysPassed = (dateObj1, dateObj2) =>
     Math.round(Math.abs(dateObj1 - dateObj2) / (1000 * 60 * 60 * 24));
@@ -295,6 +337,21 @@ btnLogin.addEventListener('click', function (e) {
 
     // Update UI
     updateUI(currentAccount);
+
+    //Start 5 min timer
+
+    /*
+      //Way 1
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      console.log('Cleared previous timer');
+    }
+    */
+
+    //Way 2 short circuiting operators
+    timerInterval && clearInterval(timerInterval);
+
+    startTimer(5 * 60 * 1000, labelTimer);
   }
 });
 
