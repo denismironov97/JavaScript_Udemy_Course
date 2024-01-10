@@ -32,3 +32,21 @@ document.addEventListener('keydown', function (e) {
     closeModal();
   }
 });
+
+// Cookie notification box and functionality
+const cookieBox = document.createElement('div');
+cookieBox.classList.add('cookie-message');
+const cookieBoxMessage =
+  'We use cookies for improved functionality and analytics.';
+
+const cookieButton = document.createElement('button');
+cookieButton.classList.add('btn', 'btn--close-cookie');
+cookieButton.textContent = 'Got it!';
+
+cookieButton.addEventListener('click', () => {
+  cookieBox.remove();
+});
+
+cookieBox.append(cookieBoxMessage, cookieButton);
+
+document.querySelector('header').prepend(cookieBox);
