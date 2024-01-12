@@ -50,3 +50,31 @@ cookieButton.addEventListener('click', () => {
 cookieBox.append(cookieBoxMessage, cookieButton);
 
 document.querySelector('header').prepend(cookieBox);
+
+//Smooth scroll functionality for specific element - Legacy
+const smoothScrollToSection = function (event) {
+  const currDistanceFromTopViewportToSection =
+    section1.getBoundingClientRect().y; //section1.getBoundingClientRect().top;
+
+  const currPositionOfClientViewportFromTop = window.pageYOffset; //window.scrollY
+
+  window.scrollTo({
+    top:
+      currDistanceFromTopViewportToSection +
+      currPositionOfClientViewportFromTop,
+    behavior: 'smooth',
+  });
+};
+
+//Smooth scroll functionality for specific element - Modern
+const smoothScrollToSectionModern = function (event) {
+  section1.scrollIntoView({
+    behavior: 'smooth',
+  });
+};
+
+document
+  .querySelector('.btn--scroll-to')
+  .addEventListener('click', smoothScrollToSectionModern);
+
+const section1 = document.querySelector('#section--1');
