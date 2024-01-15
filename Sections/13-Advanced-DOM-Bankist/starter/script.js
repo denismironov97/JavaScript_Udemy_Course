@@ -75,6 +75,37 @@ const smoothScrollToSectionModern = function (event) {
 
 document
   .querySelector('.btn--scroll-to')
-  .addEventListener('click', smoothScrollToSectionModern);
+  .addEventListener('click', smoothScrollToSection);
 
 const section1 = document.querySelector('#section--1');
+
+//--------------------------------------------------------------------------------------------------
+//Smooth scroll functionality generic Implementing navigation
+const navigationEl = document.querySelector('.nav__links');
+
+const navigateToSpecificSection = function (event) {
+  event.preventDefault();
+
+  const navElement = event.target;
+  const navElemId = navElement.getAttribute('href');
+
+  if (navElemId === '#' || navElement.tagName !== 'A') {
+    return;
+  }
+
+  const correspondingSection = document.querySelector(navElemId);
+
+  const currDistanceFromTopViewportToSection =
+    correspondingSection?.getBoundingClientRect().y;
+
+  const currPositionOfClientViewportFromTop = window.pageYOffset; //window.scrollY
+
+  window.scrollTo({
+    top:
+      currDistanceFromTopViewportToSection +
+      currPositionOfClientViewportFromTop,
+    behavior: 'smooth',
+  });
+};
+
+navigationEl.addEventListener('click', navigateToSpecificSection);
