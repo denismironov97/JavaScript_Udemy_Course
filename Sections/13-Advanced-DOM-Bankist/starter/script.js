@@ -109,3 +109,46 @@ const navigateToSpecificSection = function (event) {
 };
 
 navigationEl.addEventListener('click', navigateToSpecificSection);
+
+//Building a tabbed component
+const operationsTabs = document.querySelectorAll(
+  '.operations__tab-container .operations__tab'
+);
+
+const operationsContent = document.querySelectorAll(
+  '.operations .operations__content'
+);
+
+const navigateTabbedComponent = function (event) {
+  const element = event.target.closest('.operations__tab'); //Closest btn elem as parent
+
+  //Guard clause
+  if (!element) {
+    return;
+  }
+
+  //Active Tab Btn Component
+  operationsTabs.forEach(currTabElem =>
+    removeSpecificClassFromElem(currTabElem, 'operations__tab--active')
+  );
+  element.classList.add('operations__tab--active');
+
+  //Active Tab Content
+  operationsContent.forEach(currContentElem =>
+    removeSpecificClassFromElem(currContentElem, 'operations__content--active')
+  );
+
+  const contentTabNumber = element.dataset.tab;
+  const operationContent = document.querySelector(
+    `.operations__content--${contentTabNumber}`
+  );
+  operationContent.classList.add('operations__content--active');
+
+  function removeSpecificClassFromElem(elementRef, stringClassToRemove) {
+    elementRef.classList.remove(stringClassToRemove);
+  }
+};
+
+document
+  .querySelector('.operations__tab-container')
+  .addEventListener('click', navigateTabbedComponent);
