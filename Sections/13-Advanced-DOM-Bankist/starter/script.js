@@ -152,3 +152,42 @@ const navigateTabbedComponent = function (event) {
 document
   .querySelector('.operations__tab-container')
   .addEventListener('click', navigateTabbedComponent);
+
+//--------------------------------------------------------------------------------------------------
+//Menu fade navigation
+const navElem = document.querySelector('.nav');
+navElem.addEventListener('mouseover', function (event) {
+  const element = event.target;
+  if (!element.classList.contains('nav__link')) {
+    return;
+  }
+
+  const logo = element.closest('.nav').querySelector('img');
+  const siblings =
+    element.parentElement.parentElement.querySelectorAll('.nav__link');
+  siblings.forEach(navLinkElem => {
+    if (navLinkElem !== element) {
+      navLinkElem.style.opacity = 0.4;
+    }
+  });
+
+  logo.style.opacity = 0.4;
+});
+
+navElem.addEventListener('mouseout', function (event) {
+  const element = event.target;
+  if (!element.classList.contains('nav__link')) {
+    return;
+  }
+
+  const logo = element.closest('.nav').querySelector('img');
+  const siblings =
+    element.parentElement.parentElement.querySelectorAll('.nav__link');
+  siblings.forEach(navLinkElem => {
+    if (navLinkElem !== element) {
+      navLinkElem.style.opacity = 1;
+    }
+  });
+
+  logo.style.opacity = 1;
+});
