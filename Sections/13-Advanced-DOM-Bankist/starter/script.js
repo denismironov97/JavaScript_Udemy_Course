@@ -157,7 +157,7 @@ document
 //Menu fade navigation
 const navElem = document.querySelector('.nav');
 
-const handleHover = function (event, opacity) {
+const handleHover = function (event) {
   const element = event.target;
   if (!element.classList.contains('nav__link')) {
     return;
@@ -168,17 +168,13 @@ const handleHover = function (event, opacity) {
     element.parentElement.parentElement.querySelectorAll('.nav__link');
   siblings.forEach(navLinkElem => {
     if (navLinkElem !== element) {
-      navLinkElem.style.opacity = opacity;
+      navLinkElem.style.opacity = this;
     }
   });
 
-  logo.style.opacity = opacity;
+  logo.style.opacity = this;
 };
 
-navElem.addEventListener('mouseover', function (event) {
-  handleHover(event, 0.4);
-});
+navElem.addEventListener('mouseover', handleHover.bind(0.4));
 
-navElem.addEventListener('mouseout', function (event) {
-  handleHover(event, 1);
-});
+navElem.addEventListener('mouseout', handleHover.bind(1));
