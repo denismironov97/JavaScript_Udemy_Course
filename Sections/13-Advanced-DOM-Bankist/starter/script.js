@@ -156,7 +156,8 @@ document
 //--------------------------------------------------------------------------------------------------
 //Menu fade navigation
 const navElem = document.querySelector('.nav');
-navElem.addEventListener('mouseover', function (event) {
+
+const handleHover = function (event, opacity) {
   const element = event.target;
   if (!element.classList.contains('nav__link')) {
     return;
@@ -167,27 +168,17 @@ navElem.addEventListener('mouseover', function (event) {
     element.parentElement.parentElement.querySelectorAll('.nav__link');
   siblings.forEach(navLinkElem => {
     if (navLinkElem !== element) {
-      navLinkElem.style.opacity = 0.4;
+      navLinkElem.style.opacity = opacity;
     }
   });
 
-  logo.style.opacity = 0.4;
+  logo.style.opacity = opacity;
+};
+
+navElem.addEventListener('mouseover', function (event) {
+  handleHover(event, 0.4);
 });
 
 navElem.addEventListener('mouseout', function (event) {
-  const element = event.target;
-  if (!element.classList.contains('nav__link')) {
-    return;
-  }
-
-  const logo = element.closest('.nav').querySelector('img');
-  const siblings =
-    element.parentElement.parentElement.querySelectorAll('.nav__link');
-  siblings.forEach(navLinkElem => {
-    if (navLinkElem !== element) {
-      navLinkElem.style.opacity = 1;
-    }
-  });
-
-  logo.style.opacity = 1;
+  handleHover(event, 1);
 });
