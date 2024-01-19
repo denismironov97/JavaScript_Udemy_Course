@@ -178,3 +178,42 @@ const handleHover = function (event) {
 navElem.addEventListener('mouseover', handleHover.bind(0.4));
 
 navElem.addEventListener('mouseout', handleHover.bind(1));
+
+//--------------------------------------------------------------------------------------------------
+//Implementing sticky navigation bar - Legacy Implementation
+/*
+const coordinatesFromTopToSection = section1.getBoundingClientRect().top;
+window.addEventListener('scroll', function () {
+  console.log();
+  const currPosOfScrollOnPage = window.scrollY;
+  if (currPosOfScrollOnPage > coordinatesFromTopToSection) {
+    navElem.classList.add('sticky');
+  } else {
+    navElem.classList.remove('sticky');
+  }
+});
+*/
+
+//--------------------------------------------------------------------------------------------------
+//Implementing sticky navigation bar - Intersection Observer API
+const header = document.querySelector('.header');
+const navHeight = navElem.getBoundingClientRect().height;
+console.log(navHeight);
+
+const optionsObj = {
+  root: null,
+  rootMargin: `${-navHeight}px`,
+  threshold: 0,
+};
+const observerCallbackFn = function (entries, observerRef) {
+  const [intersectionEntryObj] = entries;
+
+  if (!intersectionEntryObj.isIntersecting) {
+    navElem.classList.add('sticky');
+  } else {
+    navElem.classList.remove('sticky');
+  }
+};
+
+const observerAPI = new IntersectionObserver(observerCallbackFn, optionsObj);
+observerAPI.observe(header);
