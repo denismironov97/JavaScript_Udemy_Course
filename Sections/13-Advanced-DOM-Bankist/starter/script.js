@@ -249,3 +249,42 @@ const sectionObserver = new IntersectionObserver(
 sections.forEach(function (section) {
   sectionObserver.observe(section);
 });
+
+//--------------------------------------------------------------------------------------------------
+//Implementing lazy loading img-s
+const imgs = document.querySelectorAll('img[data-src]');
+
+const loadImgCallbackFn = function (entries, observerRef) {
+  const [entry] = entries;
+
+  if (!entry.isIntersecting) {
+    return;
+  }
+
+  const targetElement = entry?.target;
+  targetElement.src = targetElement.dataset.src;
+
+  observerRef.unobserve(targetElement);
+};
+
+const imgObserverOptionsObj = {
+  root: null,
+  rootMargin: '100px',
+  threshold: 0,
+};
+
+const imgObserver = new IntersectionObserver(
+  loadImgCallbackFn,
+  imgObserverOptionsObj
+);
+
+imgs.forEach(function (currImg) {
+  imgObserver.observe(currImg);
+
+  currImg.addEventListener('load', () => {
+    console.log('loaded event triggered');
+
+    //currImg variable is accessible because of closure
+    currImg.classList.remove('lazy-img');
+  });
+});
