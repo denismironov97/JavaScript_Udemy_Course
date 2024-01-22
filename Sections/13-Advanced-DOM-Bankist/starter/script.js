@@ -198,7 +198,6 @@ window.addEventListener('scroll', function () {
 //Implementing sticky navigation bar - Intersection Observer API
 const header = document.querySelector('.header');
 const navHeight = navElem.getBoundingClientRect().height;
-console.log(navHeight);
 
 const optionsObj = {
   root: null,
@@ -217,3 +216,36 @@ const observerCallbackFn = function (entries, observerRef) {
 
 const observerAPI = new IntersectionObserver(observerCallbackFn, optionsObj);
 observerAPI.observe(header);
+
+//--------------------------------------------------------------------------------------------------
+//Implementing revealing elements/section on scroll
+//First apply the section--hidden class to each section element
+const sections = document.querySelectorAll('section');
+sections.forEach(section => section.classList.add('section--hidden'));
+
+const revealSection = function (entries, observerRef) {
+  const [entry] = entries;
+
+  //Guard clause
+  if (!entry.isIntersecting) {
+    return;
+  }
+
+  entry?.target.classList.remove('section--hidden');
+
+  observerRef.unobserve(entry?.target);
+};
+
+const sectionObserverOptionsObj = {
+  root: null,
+  threshold: 0.2,
+};
+
+const sectionObserver = new IntersectionObserver(
+  revealSection,
+  sectionObserverOptionsObj
+);
+
+sections.forEach(function (section) {
+  sectionObserver.observe(section);
+});

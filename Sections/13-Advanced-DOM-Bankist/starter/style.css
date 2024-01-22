@@ -41,6 +41,7 @@ body {
   transition: transform 1s, opacity 1s;
 }
 
+/* Hiding sections */
 .section--hidden {
   opacity: 0;
   transform: translateY(8rem);
@@ -656,6 +657,7 @@ h4 {
   background: none;
 }
 
+/* Hiding elements */
 .hidden {
   visibility: hidden;
   opacity: 0;
