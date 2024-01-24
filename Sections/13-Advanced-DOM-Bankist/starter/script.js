@@ -336,3 +336,49 @@ leftBtn.addEventListener('click', function () {
 
   shiftSlideElem(sliderIndexPos);
 });
+
+const sliderComponent = document.querySelector('.slider');
+
+const sliderOptionsObj = {
+  root: null,
+  threshold: 0,
+  rootMargin: `${-navHeight}px`,
+};
+
+let isSliderInView = false;
+const sliderObserverCallbackFn = function (entries, observerRef) {
+  const [entry] = entries;
+
+  if (entry.isIntersecting) {
+    isSliderInView = true;
+  } else {
+    isSliderInView = false;
+  }
+};
+
+const sliderObserver = new IntersectionObserver(
+  sliderObserverCallbackFn,
+  sliderOptionsObj
+);
+sliderObserver.observe(sliderComponent);
+
+document.addEventListener('keydown', function (event) {
+  if (!isSliderInView) {
+    return;
+  }
+
+  const pressedButton = event.key;
+
+  if (pressedButton !== 'ArrowRight' && pressedButton !== 'ArrowLeft') {
+    return;
+  }
+
+  const arrowButton = {
+    ArrowRight: rightBtn,
+    ArrowLeft: leftBtn,
+  };
+
+  arrowButton[pressedButton].click();
+
+  console.log('arrow event triggered');
+});
