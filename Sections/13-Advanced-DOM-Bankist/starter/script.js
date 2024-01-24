@@ -220,6 +220,7 @@ observerAPI.observe(header);
 //--------------------------------------------------------------------------------------------------
 //Implementing revealing elements/section on scroll
 //First apply the section--hidden class to each section element
+/*
 const sections = document.querySelectorAll('section');
 sections.forEach(section => section.classList.add('section--hidden'));
 
@@ -249,6 +250,7 @@ const sectionObserver = new IntersectionObserver(
 sections.forEach(function (section) {
   sectionObserver.observe(section);
 });
+*/
 
 //--------------------------------------------------------------------------------------------------
 //Implementing lazy loading img-s
@@ -287,4 +289,50 @@ imgs.forEach(function (currImg) {
     //currImg variable is accessible because of closure
     currImg.classList.remove('lazy-img');
   });
+});
+
+//--------------------------------------------------------------------------------------------------
+//Implementing sliding components slider elem and slides
+const sliders = document.querySelectorAll('.slider .slide');
+
+//Initial positioning of sliders on page load
+sliders.forEach((currSlider, currIndex) => {
+  currSlider.style.transform = `translateX(${currIndex * 100}%)`;
+});
+
+const [leftBtn, rightBtn] = document.querySelectorAll('.slider button');
+
+const shiftSlideElem = function (sliderIndexPos) {
+  sliders.forEach((currSlider, currIndex) => {
+    currSlider.style.transform = `translateX(${
+      100 * (currIndex - sliderIndexPos)
+    }%)`;
+  });
+};
+
+let sliderIndexPos = 0;
+const maxLength = sliders.length - 1;
+
+rightBtn.addEventListener('click', function () {
+  if (sliderIndexPos === maxLength) {
+    sliderIndexPos = 0;
+  } else {
+    sliderIndexPos++;
+  }
+
+  //-100%, 0%, 100%, 200% etc.
+  /*
+  sliders.forEach((currSlider, currIndex) => {
+    currSlider.style.transform = `translateX(${
+      100 * (currIndex - sliderIndexPos)
+    }%)`;
+  });
+  */
+  shiftSlideElem(sliderIndexPos);
+});
+
+leftBtn.addEventListener('click', function () {
+  sliderIndexPos = sliderIndexPos === 0 ? maxLength : --sliderIndexPos;
+
+  shiftSlideElem(sliderIndexPos);
 });
