@@ -300,6 +300,26 @@ sliders.forEach((currSlider, currIndex) => {
   currSlider.style.transform = `translateX(${currIndex * 100}%)`;
 });
 
+const dotsContainer = document.querySelector('.dots');
+dotsContainer.addEventListener('click', dotHandler);
+
+const createDotElement = function (indexArg) {
+  const buttonElem = document.createElement('button');
+  buttonElem.classList.add('dots__dot');
+  buttonElem.dataset.slide = indexArg;
+
+  return buttonElem;
+};
+
+const docFragment = new DocumentFragment();
+for (let i = 0; i < sliders.length; i++) {
+  docFragment.append(createDotElement(i));
+}
+
+dotsContainer.appendChild(docFragment);
+
+toggleDotElement(document.querySelector('button[data-slide="0"]'));
+
 const [leftBtn, rightBtn] = document.querySelectorAll('.slider button');
 
 const shiftSlideElem = function (sliderIndexPos) {
@@ -312,6 +332,8 @@ const shiftSlideElem = function (sliderIndexPos) {
 
 let sliderIndexPos = 0;
 const maxLength = sliders.length - 1;
+
+const dotsContainerArr = [...document.querySelector('.dots').childNodes];
 
 rightBtn.addEventListener('click', function () {
   if (sliderIndexPos === maxLength) {
@@ -329,12 +351,26 @@ rightBtn.addEventListener('click', function () {
   });
   */
   shiftSlideElem(sliderIndexPos);
+
+  const dotElement = dotsContainerArr.find(function (currElem) {
+    const dotIndex = Number(currElem.dataset.slide);
+    return dotIndex === sliderIndexPos;
+  });
+
+  toggleDotElement(dotElement);
 });
 
 leftBtn.addEventListener('click', function () {
   sliderIndexPos = sliderIndexPos === 0 ? maxLength : --sliderIndexPos;
 
   shiftSlideElem(sliderIndexPos);
+
+  const dotElement = dotsContainerArr.find(function (currElem) {
+    const dotIndex = Number(currElem.dataset.slide);
+    return dotIndex === sliderIndexPos;
+  });
+
+  toggleDotElement(dotElement);
 });
 
 const sliderComponent = document.querySelector('.slider');
@@ -382,3 +418,29 @@ document.addEventListener('keydown', function (event) {
 
   console.log('arrow event triggered');
 });
+
+//--------------------------------------------------------------------------------------------------
+//Implementing dots components that work together with slider feature
+function dotHandler(event) {
+  if (event.target.tagName.toLowerCase() !== 'button') {
+    return;
+  }
+
+  const dotElement = event.target;
+  const slideIndex = Number(dotElement.dataset.slide);
+
+  toggleDotElement(dotElement);
+
+  shiftSlideElem(slideIndex);
+}
+
+function toggleDotElement(dotElement) {
+  dotElement
+    .closest('.dots')
+    .querySelectorAll('button')
+    .forEach(currDotElem => {
+      currDotElem.classList.remove('dots__dot--active');
+    });
+
+  dotElement.classList.add('dots__dot--active');
+}
