@@ -295,13 +295,17 @@ imgs.forEach(function (currImg) {
 //Implementing sliding components slider elem and slides
 const sliders = document.querySelectorAll('.slider .slide');
 
+const [leftBtn, rightBtn] = document.querySelectorAll('.slider button');
+
+const dotsContainer = document.querySelector('.dots');
+
+let sliderIndexPos = 0;
+const maxLength = sliders.length - 1;
+
 //Initial positioning of sliders on page load
 sliders.forEach((currSlider, currIndex) => {
   currSlider.style.transform = `translateX(${currIndex * 100}%)`;
 });
-
-const dotsContainer = document.querySelector('.dots');
-dotsContainer.addEventListener('click', dotHandler);
 
 const createDotElement = function (indexArg) {
   const buttonElem = document.createElement('button');
@@ -318,10 +322,16 @@ for (let i = 0; i < sliders.length; i++) {
 
 dotsContainer.appendChild(docFragment);
 
+const dotsContainerArr = [...document.querySelector('.dots').childNodes];
+
+const sliderComponent = document.querySelector('.slider');
+
+//Highlighting first dot on page load
 toggleDotElement(document.querySelector('button[data-slide="0"]'));
 
-const [leftBtn, rightBtn] = document.querySelectorAll('.slider button');
+dotsContainer.addEventListener('click', dotHandler);
 
+//Handlers
 const shiftSlideElem = function (sliderIndexPos) {
   sliders.forEach((currSlider, currIndex) => {
     currSlider.style.transform = `translateX(${
@@ -329,11 +339,6 @@ const shiftSlideElem = function (sliderIndexPos) {
     }%)`;
   });
 };
-
-let sliderIndexPos = 0;
-const maxLength = sliders.length - 1;
-
-const dotsContainerArr = [...document.querySelector('.dots').childNodes];
 
 rightBtn.addEventListener('click', function () {
   if (sliderIndexPos === maxLength) {
@@ -352,10 +357,7 @@ rightBtn.addEventListener('click', function () {
   */
   shiftSlideElem(sliderIndexPos);
 
-  const dotElement = dotsContainerArr.find(function (currElem) {
-    const dotIndex = Number(currElem.dataset.slide);
-    return dotIndex === sliderIndexPos;
-  });
+  const dotElement = getDotElement(dotsContainerArr);
 
   toggleDotElement(dotElement);
 });
@@ -365,15 +367,17 @@ leftBtn.addEventListener('click', function () {
 
   shiftSlideElem(sliderIndexPos);
 
-  const dotElement = dotsContainerArr.find(function (currElem) {
-    const dotIndex = Number(currElem.dataset.slide);
-    return dotIndex === sliderIndexPos;
-  });
+  const dotElement = getDotElement(dotsContainerArr);
 
   toggleDotElement(dotElement);
 });
 
-const sliderComponent = document.querySelector('.slider');
+function getDotElement(dotsContainerArr) {
+  return dotsContainerArr.find(function (currElem) {
+    const dotIndex = Number(currElem.dataset.slide);
+    return dotIndex === sliderIndexPos;
+  });
+}
 
 const sliderOptionsObj = {
   root: null,
@@ -428,6 +432,8 @@ function dotHandler(event) {
 
   const dotElement = event.target;
   const slideIndex = Number(dotElement.dataset.slide);
+
+  sliderIndexPos = slideIndex;
 
   toggleDotElement(dotElement);
 
