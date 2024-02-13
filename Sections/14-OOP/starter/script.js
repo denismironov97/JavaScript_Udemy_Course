@@ -70,6 +70,7 @@ console.log(jonas.hasOwnProperty('species'));
 //console.log(jonas.__proto__.__proto__);
 //console.log(jonas.__proto__ === Person.prototype);
 
+/*
 const arr1 = [1, 2, 3, 4, 5];
 console.log(arr1.__proto__);
 console.log(arr1.__proto__.__proto__);
@@ -97,6 +98,8 @@ console.log(arr.unique());
 
 const h1 = document.querySelector('h1');
 console.dir(x => x + 1);
+
+*/
 
 ///////////////////////////////////////
 // ES6 Classes
@@ -141,7 +144,7 @@ class PersonCl {
     console.log(this);
   }
 }
-
+/*
 const jessica = new PersonCl('Jessica Davis', 1996);
 console.log(jessica);
 jessica.calcAge();
@@ -153,6 +156,7 @@ console.log(jessica.__proto__ === PersonCl.prototype);
 //   console.log(`Hey ${this.firstName}`);
 // };
 jessica.greet();
+*/
 
 // 1. Classes are NOT hoisted
 // 2. Classes are first-class citizens
@@ -160,3 +164,27 @@ jessica.greet();
 
 const walter = new PersonCl('Walter White', 1965);
 // PersonCl.hey();
+
+console.log(walter.fullName);
+console.log(walter._fullName);
+console.log(walter._fullName === walter.fullName); //true
+
+///////////////////////////////////////
+// Setters and Getters
+const account = {
+  owner: 'Jonas',
+  movements: [200, 530, 120, 300],
+
+  get latest() {
+    return this.movements.slice(-1).pop();
+  },
+
+  set latest(mov) {
+    this.movements.push(mov);
+  },
+};
+
+console.log(account.latest);
+
+account.latest = 50;
+console.log(account.movements);
