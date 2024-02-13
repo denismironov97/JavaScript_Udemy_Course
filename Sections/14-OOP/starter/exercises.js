@@ -42,3 +42,5 @@ console.log(car2.accelerate());
 const car3 = new Car('Mercedes', 95);
 console.log(car3.brake());
 console.log(car3.accelerate());
+
+console.log(car3 instanceof Car);
