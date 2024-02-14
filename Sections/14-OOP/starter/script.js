@@ -43,6 +43,11 @@ Person.prototype.calcAge = function () {
   console.log(2037 - this.birthYear);
 };
 
+Person.staticMethod = function () {
+  console.log(this);
+  console.log('Hello this is c-tor function static method!');
+};
+
 //jonas.calcAge();
 //matilda.calcAge();
 
@@ -138,6 +143,7 @@ class PersonCl {
     return this._fullName;
   }
 
+  //! Class static method
   // Static method
   static hey() {
     console.log('Hey there 👋');
