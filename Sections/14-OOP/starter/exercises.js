@@ -10,6 +10,7 @@ DATA CAR 1: 'BMW' going at 120 km/h
 DATA CAR 2: 'Mercedes' going at 95 km/h
 */
 
+/*
 const Car = function (make, speed) {
   this.make = make;
   this.speed = speed;
@@ -44,3 +45,58 @@ console.log(car3.brake());
 console.log(car3.accelerate());
 
 console.log(car3 instanceof Car);
+*/
+
+/*
+// Coding Challenge/Exercise #2
+
+1. Re-create challenge 1, but this time using an ES6 class;
+2. Add a getter called 'speedUS' which returns the current speed in mi/h (divide by 1.6);
+3. Add a setter called 'speedUS' which sets the current speed in mi/h (but converts it to km/h before storing the value, by multiplying the input by 1.6);
+4. Create a new car and experiment with the accelerate and brake methods, and with the getter and setter.
+
+DATA CAR 1: 'Ford' going at 120 km/h
+*/
+
+class CarCl {
+  constructor(make, speed) {
+    this.make = make;
+    this.speed = speed;
+  }
+
+  accelerate() {
+    this.speed += 10;
+
+    return this.toString();
+  }
+
+  brake() {
+    this.speed -= 5;
+
+    return this.toString();
+  }
+
+  get speedUS() {
+    return this.speed / 1.6;
+  }
+
+  set speedUS(value) {
+    this.speed = value * 1.6;
+  }
+
+  toString() {
+    return `${this.speed}km/h-${this.make}`;
+  }
+}
+
+const jaguar = new CarCl('Jaguar', 150);
+//console.log(jaguar);
+//console.log(jaguar.__proto__);
+
+console.log(jaguar.brake());
+console.log(jaguar.accelerate());
+
+console.log(`Speed US: ${jaguar.speedUS}`);
+jaguar.speedUS = 123;
+
+console.log(jaguar);
