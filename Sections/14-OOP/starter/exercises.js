@@ -58,6 +58,7 @@ console.log(car3 instanceof Car);
 DATA CAR 1: 'Ford' going at 120 km/h
 */
 
+/*
 class CarCl {
   constructor(make, speed) {
     this.make = make;
@@ -100,3 +101,68 @@ console.log(`Speed US: ${jaguar.speedUS}`);
 jaguar.speedUS = 123;
 
 console.log(jaguar);
+*/
+
+/* 
+Coding Challenge #3
+
+1. Use a constructor function to implement an Electric Car (called EV) as a CHILD "class" of Car. Besides a make and current speed, the EV also has the current battery charge in % ('charge' property);
+2. Implement a 'chargeBattery' method which takes an argument 'chargeTo' and sets the battery charge to 'chargeTo';
+3. Implement an 'accelerate' method that will increase the car's speed by 20, and decrease the charge by 1%. Then log a message like this: 'Tesla going at 140 km/h, with a charge of 22%';
+4. Create an electric car object and experiment with calling 'accelerate', 'brake' and 'chargeBattery' (charge to 90%). Notice what happens when you 'accelerate'! HINT: Review the definiton of polymorphism 😉
+
+DATA CAR 1: 'Tesla' going at 120 km/h, with a charge of 23%
+*/
+
+//Parent c-tor function
+const Car = function (make, speed) {
+  this.make = make;
+  this.speed = speed;
+};
+
+Car.prototype.brake = function () {
+  this.speed -= 5;
+
+  return this.toString();
+};
+
+Car.prototype.toString = function () {
+  return `${this.make} going ${this.speed}km\h with charge of ${this.charge}%`;
+};
+
+//Child c-tor function
+const ElectricCar = function (make, speed, charge) {
+  //Inheritance-using parent's c-tor func with this->to ElectricCar
+  Car.call(this, make, speed);
+
+  this.charge = charge;
+};
+
+//Prototype chain linking-Setting up the prototype chain
+ElectricCar.prototype = Object.create(Car.prototype);
+
+//ElectricCar c-tor func to point to ElectricCar not Car
+ElectricCar.prototype.constructor = ElectricCar;
+
+ElectricCar.prototype.accelerate = function () {
+  this.speed += 20;
+  //this.charge--;
+  this.charge -= 7;
+
+  return this.toString();
+};
+
+ElectricCar.prototype.chargeBattery = function (chargeTo) {
+  this.charge = chargeTo;
+
+  return `${this.make} charged to ${this.charge}%`;
+};
+
+const tesla = new ElectricCar('Tesla', 150, 33);
+console.log(tesla);
+console.log(tesla.toString());
+console.log(tesla.accelerate());
+console.log(tesla.brake());
+console.log(tesla.chargeBattery(90));
+
+console.dir(ElectricCar.prototype.constructor);
