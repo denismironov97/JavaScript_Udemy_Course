@@ -114,6 +114,7 @@ Coding Challenge #3
 DATA CAR 1: 'Tesla' going at 120 km/h, with a charge of 23%
 */
 
+/*
 //Parent c-tor function
 const Car = function (make, speed) {
   this.make = make;
@@ -166,3 +167,108 @@ console.log(tesla.brake());
 console.log(tesla.chargeBattery(90));
 
 console.dir(ElectricCar.prototype.constructor);
+*/
+
+///////////////////////////////////////
+// Coding Challenge #4
+
+/* 
+1. Re-create challenge #3, but this time using ES6 classes: create an 'EVCl' child class of the 'CarCl' class
+2. Make the 'charge' property private;
+3. Implement the ability to chain the 'accelerate' and 'chargeBattery' methods of this class, and also update the 'brake' method in the 'CarCl' class. Then experiment with chaining!
+
+DATA CAR 1: 'Rivian' going at 120 km/h, with a charge of 23%
+
+GOOD LUCK 😀
+*/
+
+class CarCl {
+  constructor(make, speed) {
+    this.make = make;
+    this.speed = speed;
+  }
+
+  accelerate() {
+    this.speed += 10;
+
+    this._logCarInfo();
+  }
+
+  brake() {
+    this.speed -= 5;
+
+    this._logCarInfo();
+  }
+
+  get speedUS() {
+    return this.speed / 1.6;
+  }
+
+  set speedUS(speed) {
+    this.speed = speed * 1.6;
+  }
+
+  _logCarInfo() {
+    console.log(`${this.make} is going at ${this.speed} km/h`);
+  }
+}
+
+class ElectricVehicle extends CarCl {
+  constructor(make, speed, charge) {
+    super(make, speed);
+
+    this.charge = charge;
+  }
+
+  get charge() {
+    return this._charge;
+  }
+
+  set charge(value) {
+    this._charge = value;
+  }
+
+  accelerate() {
+    this.speed += 10;
+    this.charge -= 5;
+
+    this._logCarInfo();
+
+    return this;
+  }
+
+  brake() {
+    this.speed -= 5;
+    this.charge--;
+
+    this._logCarInfo();
+
+    return this;
+  }
+
+  chargeBattery(chargeTo) {
+    this.charge = chargeTo;
+
+    console.log(`Car charged to: ${this.charge}%`);
+
+    return this;
+  }
+
+  _logCarInfo() {
+    console.log(
+      `${this.make} is going at ${this.speed} km/h battery:${this.charge}%`
+    );
+  }
+}
+
+//DATA CAR 1: 'Rivian' going at 120 km/h, with a charge of 23%
+const electricCar = new ElectricVehicle('Rivian', 120, 23);
+electricCar
+  .brake()
+  .accelerate()
+  .chargeBattery(77)
+  .accelerate()
+  .brake()
+  .accelerate()
+  .accelerate()
+  .accelerate();
