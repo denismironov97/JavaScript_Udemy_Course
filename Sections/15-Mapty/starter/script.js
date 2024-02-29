@@ -17,7 +17,10 @@ navigator?.geolocation.getCurrentPosition(
     const { latitude, longitude } = positionObjData.coords;
 
     //Google maps link
-    //console.log(`https://www.google.com/maps/@${latitude},${longitude}`);
+    console.log(
+      'Google maps link',
+      `https://www.google.com/maps/@${latitude},${longitude}`
+    );
 
     const coordsArr = [latitude, longitude];
 
@@ -30,11 +33,30 @@ navigator?.geolocation.getCurrentPosition(
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(map);
 
-    //Marker
-    L.marker(coordsArr)
-      .addTo(map)
-      .bindPopup('A pretty CSS popup.<br> Easily customizable.')
-      .openPopup();
+    map.on('click', function (mapEvent) {
+      const { lat: latitude, lng: longitude } = mapEvent.latlng;
+
+      const markerOptions = {
+        riseOnHover: true,
+      };
+
+      const popupContentOptions = {
+        maxWidth: 250,
+        minWidth: 100,
+        autoClose: false,
+        closeOnClick: false,
+        className: 'running-popup',
+      };
+
+      const popupContent = L.popup(popupContentOptions);
+
+      //Marker
+      L.marker([latitude, longitude])
+        .addTo(map)
+        .bindPopup(popupContent)
+        .setPopupContent('Workout')
+        .openPopup();
+    });
   },
   function failCallback() {
     console.log('Failed to fetch coordinates!');
