@@ -14,9 +14,10 @@ const inputElevation = document.querySelector('.form__input--elevation');
 
 class App {
   constructor() {
+    this.workouts = [];
+
     this._getPosition();
 
-    //Find a better workaround
     form.addEventListener('submit', this._newWorkout.bind(this));
 
     inputType.addEventListener('change', this._toggleElevationField);
@@ -69,7 +70,7 @@ class App {
     const coordsArr = [latitude, longitude];
 
     //Leaflet Map
-    this.leafLetMap = L.map('map').setView(coordsArr, 16);
+    this.leafLetMap = L.map('map').setView(coordsArr, 17);
 
     //Leaflet tiles
     L.tileLayer('https://tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
@@ -92,6 +93,31 @@ class App {
   _newWorkout(defaultEvent) {
     defaultEvent.preventDefault();
 
+    //Creating instance object from class depending on workout option that is chosen
+    const workoutType = inputType.value.replace(
+      inputType.value[0],
+      inputType.value[0].toUpperCase()
+    );
+
+    let currWorkout;
+    if (workoutType === 'Running') {
+      currWorkout = new Running(
+        inputDistance.value,
+        inputDuration.value,
+        { latitude: this.latitude, longitude: this.longitude },
+        inputCadence.value
+      );
+    } else {
+      currWorkout = new Cycling(
+        inputDistance.value,
+        inputDuration.value,
+        { latitude: this.latitude, longitude: this.longitude },
+        inputElevation.value
+      );
+    }
+
+    this.workouts.push(currWorkout);
+
     const popupContentOptions = {
       maxWidth: 250,
       minWidth: 100,
@@ -106,7 +132,7 @@ class App {
     L.marker([this.latitude, this.longitude])
       .addTo(this.leafLetMap)
       .bindPopup(popupContent)
-      .setPopupContent('Workout')
+      .setPopupContent(workoutType)
       .openPopup();
 
     //Resetting the form element to it's original state
@@ -114,9 +140,47 @@ class App {
     inputType.focus();
   }
 
-  _toggleElevationField() {
+  _toggleElevationField(event) {
     inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
     inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
+  }
+}
+
+//Parent class for workout
+class WorkoutParent {
+  constructor(distance, duration, coords) {
+    this.id = Date.now().toString();
+
+    this.distance = distance;
+    this.duration = duration;
+    this.coords = coords;
+    this.date = new Date();
+  }
+}
+
+class Running extends WorkoutParent {
+  constructor(distance, duration, coords, cadence) {
+    super(distance, duration, coords);
+
+    this.cadence = cadence;
+    this.pace = this._calcPace();
+  }
+
+  _calcPace() {
+    return this.duration / this.distance;
+  }
+}
+
+class Cycling extends WorkoutParent {
+  constructor(distance, duration, coords, elevationGain) {
+    super(distance, duration, coords);
+
+    this.elevationGain = elevationGain;
+    this._calcSpeed();
+  }
+
+  _calcSpeed() {
+    this.speed = this.distance / (this.duration / 60);
   }
 }
 
