@@ -145,7 +145,7 @@ class App {
       minWidth: 100,
       autoClose: false,
       closeOnClick: false,
-      className: 'running-popup',
+      className: `leaflet-popup ${workoutType.toLowerCase()}-popup`,
     };
 
     const popupContent = L.popup(popupContentOptions);
