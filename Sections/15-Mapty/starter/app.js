@@ -118,26 +118,35 @@ class App {
         distance,
         duration,
         { latitude: this.latitude, longitude: this.longitude },
-        cadence
+        cadence,
+        workoutType
       );
     } else {
       currWorkout = new Cycling(
         distance,
         duration,
         { latitude: this.latitude, longitude: this.longitude },
-        elevation
+        elevation,
+        workoutType
       );
     }
 
     //---------------------------
+    this._clearWorkoutList();
+
     this.workouts.push(currWorkout);
 
-    const currWorkoutComponent = this._GetWorkoutComponent(
+    this._craftWorkoutsList();
+
+    /*
+    const currWorkoutComponent = this._CraftWorkoutComponent(
       currWorkout,
       workoutType.toLowerCase()
     );
 
-    containerWorkouts.append(currWorkoutComponent);
+    containerWorkouts.append(currWorkoutComponent);\
+    */
+
     //---------------------------
 
     const popupContentOptions = {
@@ -174,16 +183,19 @@ class App {
     inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
   }
 
-  _GetWorkoutComponent(currWorkoutObj, workoutType) {
+  _craftWorkoutComponent(currWorkoutObj) {
     const liActivityElem = document.createElement('li');
-    liActivityElem.classList.add('workout', `workout--${workoutType}`);
+    liActivityElem.classList.add(
+      'workout',
+      `workout--${currWorkoutObj.workoutType.toLowerCase()}`
+    );
     liActivityElem.dataset.id = currWorkoutObj.id;
 
     const h2Elem = document.createElement('h2');
     h2Elem.classList.add('workout__title');
-    h2Elem.textContent = `${workoutType.replace(
-      workoutType[0],
-      workoutType[0].toUpperCase()
+    h2Elem.textContent = `${currWorkoutObj.workoutType.replace(
+      currWorkoutObj.workoutType[0],
+      currWorkoutObj.workoutType[0].toUpperCase()
     )} on ${
       months[currWorkoutObj.date.getMonth() - 1]
     } ${currWorkoutObj.date.getDate()}`;
@@ -195,7 +207,7 @@ class App {
     const spanWorkoutDetailsIcon1 = document.createElement('span');
     spanWorkoutDetailsIcon1.classList.add('workout__icon');
     spanWorkoutDetailsIcon1.textContent =
-      workoutType === 'running' ? '🏃‍♂️' : '🚴‍♀️';
+      currWorkoutObj.workoutType === 'Running' ? '🏃‍♂️' : '🚴‍♀️';
 
     const spanWorkoutValue1 = document.createElement('span');
     spanWorkoutValue1.classList.add('workout__value');
@@ -244,12 +256,14 @@ class App {
     const spanWorkoutValue3 = document.createElement('span');
     spanWorkoutValue3.classList.add('workout__value');
     spanWorkoutValue3.textContent =
-      workoutType === 'running' ? currWorkoutObj.pace : currWorkoutObj.speed;
+      currWorkoutObj.workoutType === 'Running'
+        ? currWorkoutObj.pace
+        : currWorkoutObj.speed;
 
     const spanWorkoutUnit3 = document.createElement('span');
     spanWorkoutUnit3.classList.add('workout__unit');
     spanWorkoutUnit3.textContent =
-      workoutType === 'running' ? 'min/km' : 'km/h';
+      currWorkoutObj.workoutType === 'Running' ? 'min/km' : 'km/h';
 
     divWorkoutDetails3.append(
       spanWorkoutDetailsIcon3,
@@ -264,18 +278,19 @@ class App {
     const spanWorkoutDetailsIcon4 = document.createElement('span');
     spanWorkoutDetailsIcon4.classList.add('workout__icon');
     spanWorkoutDetailsIcon4.textContent =
-      workoutType === 'running' ? '🦶🏼' : '⛰';
+      currWorkoutObj.workoutType === 'Running' ? '🦶🏼' : '⛰';
 
     const spanWorkoutValue4 = document.createElement('span');
     spanWorkoutValue4.classList.add('workout__value');
     spanWorkoutValue4.textContent =
-      workoutType === 'running'
+      currWorkoutObj.workoutType === 'Running'
         ? currWorkoutObj.cadence
         : currWorkoutObj.elevationGain;
 
     const spanWorkoutUnit4 = document.createElement('span');
     spanWorkoutUnit4.classList.add('workout__unit');
-    spanWorkoutUnit4.textContent = workoutType === 'running' ? 'spm' : 'm';
+    spanWorkoutUnit4.textContent =
+      currWorkoutObj.workoutType === 'Running' ? 'spm' : 'm';
 
     divWorkoutDetails4.append(
       spanWorkoutDetailsIcon4,
@@ -294,6 +309,26 @@ class App {
     return liActivityElem;
   }
 
+  _craftWorkoutsList() {
+    const workoutComponents = this.workouts.map(
+      function (currWorkoutObj, currIndex, arrRef) {
+        const currWorkoutComponent =
+          this._craftWorkoutComponent(currWorkoutObj);
+
+        return currWorkoutComponent;
+      }.bind(this)
+    );
+
+    containerWorkouts.append(...workoutComponents);
+  }
+
+  _clearWorkoutList() {
+    const liElems = containerWorkouts.querySelectorAll('li.workout');
+    liElems.forEach(el => {
+      el.remove();
+    });
+  }
+
   _CheckForIncorrectInputData(distance, duration, dependingValue) {
     return (
       distance <= 0 ||
@@ -308,19 +343,20 @@ class App {
 
 //Parent class for workout
 class WorkoutParent {
-  constructor(distance, duration, coords) {
+  constructor(distance, duration, coords, workoutType) {
     this.id = Date.now().toString();
 
     this.distance = distance;
     this.duration = duration;
     this.coords = coords;
     this.date = new Date();
+    this.workoutType = workoutType;
   }
 }
 
 class Running extends WorkoutParent {
-  constructor(distance, duration, coords, cadence) {
-    super(distance, duration, coords);
+  constructor(distance, duration, coords, cadence, workoutType) {
+    super(distance, duration, coords, workoutType);
 
     this.cadence = cadence;
     this.pace = this._calcPace();
@@ -332,8 +368,8 @@ class Running extends WorkoutParent {
 }
 
 class Cycling extends WorkoutParent {
-  constructor(distance, duration, coords, elevationGain) {
-    super(distance, duration, coords);
+  constructor(distance, duration, coords, elevationGain, workoutType) {
+    super(distance, duration, coords, workoutType);
 
     this.elevationGain = elevationGain;
     this._calcSpeed();
