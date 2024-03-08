@@ -21,6 +21,11 @@ class App {
     form.addEventListener('submit', this._newWorkout.bind(this));
 
     inputType.addEventListener('change', this._toggleElevationField);
+
+    containerWorkouts.addEventListener(
+      'click',
+      this._delegateCallbckMoveToSpecificWorkout.bind(this)
+    );
   }
 
   //Protected properties
@@ -49,6 +54,28 @@ class App {
   }
 
   //Protected methods
+  //----------------------------------------------------------------------------------------------------------------------------------------------
+  _delegateCallbckMoveToSpecificWorkout(event) {
+    const liWorkoutElem = event.target.closest('.workout');
+
+    // if liWorkoutElem  is anything different of list workout elem - return
+    if (!liWorkoutElem) {
+      return;
+    }
+
+    const workoutId = liWorkoutElem.dataset.id;
+    const specificWorkoutObj = this._getSpecificWorkoutObj(workoutId);
+    const { latitude, longitude } = specificWorkoutObj.coords;
+
+    this.leafLetMap.setView([latitude, longitude], 17);
+  }
+
+  _getSpecificWorkoutObj(id) {
+    return this.workouts.find(currWorkoutObj => {
+      return currWorkoutObj.id === id;
+    });
+  }
+  //----------------------------------------------------------------------------------------------------------------------------------------------
   _getPosition() {
     navigator?.geolocation.getCurrentPosition(
       this._loadMap.bind(this),
