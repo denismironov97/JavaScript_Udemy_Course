@@ -171,12 +171,23 @@ class App {
       .setPopupContent(`${currWorkout.workoutType} on ${dateFormatString}`)
       .openPopup();
 
+    //----------
     //Resetting the form element to it's original state
+    this._resetForm(workoutType);
+  }
+
+  _resetForm(workoutType) {
     inputDistance.focus();
 
     if (workoutType === 'Cycling') {
       this._toggleElevationField();
     }
+
+    //To overcome/skip the css transition animation trigger
+    form.style.display = 'none';
+    setTimeout(() => {
+      form.style.display = 'grid';
+    }, 1000);
 
     form.reset();
     form.classList.toggle('hidden');
