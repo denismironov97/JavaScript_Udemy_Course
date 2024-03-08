@@ -342,7 +342,7 @@ class App {
   }
 
   _craftWorkoutsList() {
-    const workoutComponents = this.workouts.map(
+    const workoutComponentsArr = this.workouts.map(
       function (currWorkoutObj, currIndex, arrRef) {
         const currWorkoutComponent =
           this._craftWorkoutComponent(currWorkoutObj);
@@ -351,7 +351,11 @@ class App {
       }.bind(this)
     );
 
-    containerWorkouts.append(...workoutComponents);
+    //containerWorkouts.append(...workoutComponentsArr);
+
+    workoutComponentsArr.forEach(currComponent => {
+      form.insertAdjacentElement('afterend', currComponent);
+    });
   }
 
   _clearWorkoutList() {
