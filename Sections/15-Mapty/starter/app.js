@@ -14,6 +14,8 @@ const inputElevation = document.querySelector('.form__input--elevation');
 
 class App {
   constructor() {
+    this._defaultMapZoom = 17;
+
     this.workouts = [];
 
     this._getPosition();
@@ -29,6 +31,10 @@ class App {
   }
 
   //Protected properties
+  get defaultMapZoom() {
+    return this._defaultMapZoom;
+  }
+
   get leafLetMap() {
     return this._leafLetMap;
   }
@@ -54,7 +60,6 @@ class App {
   }
 
   //Protected methods
-  //----------------------------------------------------------------------------------------------------------------------------------------------
   _delegateCallbckMoveToSpecificWorkout(event) {
     const liWorkoutElem = event.target.closest('.workout');
 
@@ -67,7 +72,13 @@ class App {
     const specificWorkoutObj = this._getSpecificWorkoutObj(workoutId);
     const { latitude, longitude } = specificWorkoutObj.coords;
 
-    this.leafLetMap.setView([latitude, longitude], 17);
+    //*
+    this.leafLetMap.setView([latitude, longitude], this.defaultMapZoom, {
+      animate: 'true',
+      pan: {
+        duration: 1.5,
+      },
+    });
   }
 
   _getSpecificWorkoutObj(id) {
@@ -75,7 +86,7 @@ class App {
       return currWorkoutObj.id === id;
     });
   }
-  //----------------------------------------------------------------------------------------------------------------------------------------------
+
   _getPosition() {
     navigator?.geolocation.getCurrentPosition(
       this._loadMap.bind(this),
@@ -97,7 +108,7 @@ class App {
     const coordsArr = [latitude, longitude];
 
     //Leaflet Map
-    this.leafLetMap = L.map('map').setView(coordsArr, 17);
+    this.leafLetMap = L.map('map').setView(coordsArr, this.defaultMapZoom);
 
     //Leaflet tiles
     L.tileLayer('https://tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
