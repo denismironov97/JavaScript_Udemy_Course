@@ -73,6 +73,10 @@ class App {
     const { latitude, longitude } = specificWorkoutObj.coords;
 
     //*
+    specificWorkoutObj.incrementClicks();
+    console.log(specificWorkoutObj.numClicks);
+
+    //*
     this.leafLetMap.setView([latitude, longitude], this.defaultMapZoom, {
       animate: 'true',
       pan: {
@@ -431,6 +435,11 @@ class App {
       return Number.isNaN(currInput) || currInput <= 0;
     });
   }
+
+  //*
+  _getLocaleStorage() {}
+
+  _setLocaleStorage() {}
 }
 
 //Parent class for workout
@@ -443,6 +452,16 @@ class WorkoutParent {
     this.coords = coords;
     this.date = new Date();
     this.workoutType = workoutType;
+
+    this._numClicks = 0;
+  }
+
+  get numClicks() {
+    return this._numClicks;
+  }
+
+  incrementClicks() {
+    this._numClicks++;
   }
 }
 
