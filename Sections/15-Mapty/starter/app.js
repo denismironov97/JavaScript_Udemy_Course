@@ -14,7 +14,7 @@ const inputElevation = document.querySelector('.form__input--elevation');
 
 class App {
   constructor() {
-    this._defaultMapZoom = 17;
+    this._defaultMapZoom = 16;
 
     this.workouts = [];
 
@@ -63,7 +63,7 @@ class App {
   _delegateCallbckMoveToSpecificWorkout(event) {
     const liWorkoutElem = event.target.closest('.workout');
 
-    // if liWorkoutElem  is anything different of list workout elem - return
+    //if liWorkoutElem is anything different of list workout elem - return
     if (!liWorkoutElem) {
       return;
     }
@@ -72,15 +72,17 @@ class App {
     const specificWorkoutObj = this._getSpecificWorkoutObj(workoutId);
     const { latitude, longitude } = specificWorkoutObj.coords;
 
-    //*
+    /*
+    Because the prototype chain is broken when we parse workouts collection from localeStorage
     specificWorkoutObj.incrementClicks();
     console.log(specificWorkoutObj.numClicks);
+    */
 
     //*
     this.leafLetMap.setView([latitude, longitude], this.defaultMapZoom, {
       animate: 'true',
       pan: {
-        duration: 1.5,
+        duration: 1.3,
       },
     });
   }
@@ -121,6 +123,8 @@ class App {
     }).addTo(this.leafLetMap);
 
     this.leafLetMap.on('click', this._showForm.bind(this));
+
+    this._craftWorkoutsList();
   }
 
   _showForm(mapEvent) {
@@ -180,6 +184,8 @@ class App {
 
     this.workouts.push(currWorkout);
 
+    this._setLocaleStorageData();
+
     this._craftWorkoutsList();
 
     /*
@@ -191,31 +197,36 @@ class App {
     containerWorkouts.append(currWorkoutComponent);\
     */
 
+    this._craftMarker(currWorkout);
+
+    //Resetting the form element to it's original state
+    this._resetForm(workoutType);
+  }
+
+  _craftMarker(currWorkout) {
+    const { latitude, longitude } = currWorkout.coords;
+
     //Internationalization API
     const dateFormatString = new Intl.DateTimeFormat('en-US', {
       dateStyle: 'full',
-    }).format(currWorkout.date);
+    }).format(new Date(currWorkout.date));
 
     const popupContentOptions = {
       maxWidth: 250,
       minWidth: 100,
       autoClose: false,
       closeOnClick: false,
-      className: `leaflet-popup ${workoutType.toLowerCase()}-popup`,
+      className: `leaflet-popup ${currWorkout.workoutType.toLowerCase()}-popup`,
     };
 
     const popupContent = L.popup(popupContentOptions);
 
     //Marker
-    L.marker([this.latitude, this.longitude])
+    L.marker([latitude, longitude])
       .addTo(this.leafLetMap)
       .bindPopup(popupContent)
       .setPopupContent(`${currWorkout.workoutType} on ${dateFormatString}`)
       .openPopup();
-
-    //----------
-    //Resetting the form element to it's original state
-    this._resetForm(workoutType);
   }
 
   _resetForm(workoutType) {
@@ -273,14 +284,19 @@ class App {
     );
     liActivityElem.dataset.id = currWorkoutObj.id;
 
+    //* The returned string currWorkoutObj.date example "2024-03-12T11:37:49.171Z" is because
+    //  when we JSON.stringify(currWorkoutObj), the date obj property is also stringified and when we
+    //  parse it back JSON.parse(currWorkoutObj), we essentially parse a string to string
+    const currWorkoutDateObj = new Date(currWorkoutObj.date);
+
     const h2Elem = document.createElement('h2');
     h2Elem.classList.add('workout__title');
     h2Elem.textContent = `${currWorkoutObj.workoutType.replace(
       currWorkoutObj.workoutType[0],
       currWorkoutObj.workoutType[0].toUpperCase()
     )} on ${
-      months[currWorkoutObj.date.getMonth() - 1]
-    } ${currWorkoutObj.date.getDate()}`;
+      months[currWorkoutDateObj.getMonth() - 1]
+    } ${currWorkoutDateObj.getDate()}`;
 
     //Div1 container
     const divWorkoutDetails1 = document.createElement('div');
@@ -395,10 +411,15 @@ class App {
   }
 
   _craftWorkoutsList() {
+    this._getLocaleStorageData();
+
     const workoutComponentsArr = this.workouts.map(
       function (currWorkoutObj, currIndex, arrRef) {
         const currWorkoutComponent =
           this._craftWorkoutComponent(currWorkoutObj);
+
+        //*
+        this._craftMarker(currWorkoutObj);
 
         return currWorkoutComponent;
       }.bind(this)
@@ -437,9 +458,23 @@ class App {
   }
 
   //*
-  _getLocaleStorage() {}
+  _getLocaleStorageData() {
+    const workoutListFromStorage = JSON.parse(localStorage.getItem('workouts'));
 
-  _setLocaleStorage() {}
+    if (!workoutListFromStorage) {
+      return;
+    }
+
+    this.workouts = workoutListFromStorage;
+  }
+
+  _setLocaleStorageData() {
+    window.localStorage.setItem('workouts', JSON.stringify(this.workouts));
+  }
+
+  clearWorkoutsFromStorage() {
+    window.localStorage.removeItem('workouts');
+  }
 }
 
 //Parent class for workout
@@ -453,9 +488,10 @@ class WorkoutParent {
     this.date = new Date();
     this.workoutType = workoutType;
 
-    this._numClicks = 0;
+    //this._numClicks = 0;
   }
 
+  /*
   get numClicks() {
     return this._numClicks;
   }
@@ -463,6 +499,7 @@ class WorkoutParent {
   incrementClicks() {
     this._numClicks++;
   }
+  */
 }
 
 class Running extends WorkoutParent {
