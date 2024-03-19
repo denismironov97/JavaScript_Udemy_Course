@@ -113,7 +113,8 @@ const getCountryAndNeighbors = function (countryName) {
         region,
         population,
         language,
-        name
+        name,
+        'neighbor'
       );
 
       const neighborCountry2 = new XMLHttpRequest();
@@ -147,15 +148,16 @@ const getCountryAndNeighbors = function (countryName) {
           region,
           population,
           language,
-          name
+          name,
+          'neighbor'
         );
 
         countriesContainer.append(neighbor1, neighbor2);
+
+        //To trigger transition animation and reveal elements
+        countriesContainer.style.opacity = 1;
       });
     });
-
-    //To trigger transition animation and reveal elements
-    countriesContainer.style.opacity = 1;
   });
 };
 
@@ -165,10 +167,13 @@ function craftArticleElement(
   countryRegion,
   population,
   language,
-  currency
+  currency,
+  neighborClass = ''
 ) {
   const article = document.createElement('article');
   article.classList.add('country');
+
+  neighborClass && article.classList.add(neighborClass);
 
   const img = document.createElement('img');
   img.classList.add('country__img');
@@ -218,5 +223,6 @@ function craftArticleElement(
 }
 
 getCountryAndNeighbors('bulgaria');
+//getCountryAndNeighbors('germany');
 
 console.log('Works!');
