@@ -38,6 +38,7 @@ const getCountryArticle = function (countryName) {
 };
 */
 
+/*
 const getCountryAndNeighbors = function (countryName) {
   //XML or AJAX call
   //Country 1 - Main
@@ -160,6 +161,154 @@ const getCountryAndNeighbors = function (countryName) {
     });
   });
 };
+*/
+
+//With Fetch API
+const getCountryAndNeighbors = function (countryName) {
+  const countries = countriesContainer.querySelectorAll('.country');
+  countries.forEach(el => el.remove());
+  countriesContainer.style.opacity = 0;
+
+  const neighborsData = {
+    neighbor1Code: undefined,
+    neighbor2Code: undefined,
+  };
+
+  //Country 1 - Main
+  const urlEndpoint = `https://restcountries.com/v3.1/name/${countryName}`;
+  fetch(urlEndpoint)
+    .then(function (initialResponse) {
+      if (initialResponse.status !== 200) {
+        throw new Error('Error Country - No such country exists.');
+      }
+
+      const streamData = initialResponse.json();
+      return streamData;
+    })
+    .then(function (readStreamData) {
+      const [countryData] = readStreamData;
+
+      const {
+        name: { common },
+        flags: { svg },
+        region,
+        population,
+        languages,
+        currencies,
+      } = countryData;
+
+      const [language] = Object.values(languages);
+      const [currencyData] = Object.values(currencies);
+      const { name, symbol } = currencyData;
+
+      const neighborsCodesArr = countryData?.borders;
+
+      //Selected country has no neighbors
+      if (!neighborsCodesArr || neighborsCodesArr.length < 2) {
+        throw new Error(
+          'Country has neighbors - neighbors < 2. Search another country.'
+        );
+      }
+
+      //Crafting Main Country
+      // prettier-ignore
+      const mainCountryEl = craftArticleElement(svg, common, region, population, language, name);
+
+      countriesContainer.append(mainCountryEl);
+
+      const [neighbor1Code, neighbor2Code, ...neighborsRest] =
+        neighborsCodesArr;
+
+      neighborsData.neighbor1Code = neighbor1Code;
+      neighborsData.neighbor2Code = neighbor2Code;
+
+      const promiseVariable = fetch(
+        `https://restcountries.com/v3.1/alpha/${neighbor1Code}`
+      );
+
+      return promiseVariable;
+    })
+    .then(function (promiseVariable) {
+      const streamData = promiseVariable.json();
+
+      return streamData;
+    })
+    .then(function (readStreamData) {
+      const [countryData] = readStreamData;
+
+      const {
+        name: { common },
+        flags: { svg },
+        region,
+        population,
+        languages,
+        currencies,
+      } = countryData;
+
+      const [language] = Object.values(languages);
+      const [currencyData] = Object.values(currencies);
+      const { name, symbol } = currencyData;
+
+      countriesContainer.append(
+        craftArticleElement(
+          svg,
+          common,
+          region,
+          population,
+          language,
+          name,
+          'neighbor'
+        )
+      );
+
+      const promiseVariable = fetch(
+        `https://restcountries.com/v3.1/alpha/${neighborsData.neighbor2Code}`
+      );
+
+      return promiseVariable;
+    })
+    .then(function (promiseVariable) {
+      const streamData = promiseVariable.json();
+
+      return streamData;
+    })
+    .then(function (readStreamData) {
+      const [countryData] = readStreamData;
+
+      const {
+        name: { common },
+        flags: { svg },
+        region,
+        population,
+        languages,
+        currencies,
+      } = countryData;
+
+      const [language] = Object.values(languages);
+      const [currencyData] = Object.values(currencies);
+      const { name, symbol } = currencyData;
+
+      countriesContainer.append(
+        craftArticleElement(
+          svg,
+          common,
+          region,
+          population,
+          language,
+          name,
+          'neighbor'
+        )
+      );
+    })
+    .catch(error => {
+      window.alert(error.message);
+    })
+    .finally(function () {
+      //To trigger transition animation and reveal elements
+      countriesContainer.style.opacity = 1;
+      console.log('triggered');
+    });
+};
 
 function craftArticleElement(
   imgSource,
@@ -222,7 +371,15 @@ function craftArticleElement(
   return article;
 }
 
-getCountryAndNeighbors('bulgaria');
-//getCountryAndNeighbors('germany');
+const buttonEl = document.querySelector('.search-container button');
+buttonEl.addEventListener('click', event => {
+  const inputElem = event.target
+    .closest('.search-container')
+    .querySelector('.country-input-search');
+
+  getCountryAndNeighbors(inputElem.value.toLowerCase());
+
+  inputElem.value = '';
+});
 
 console.log('Works!');

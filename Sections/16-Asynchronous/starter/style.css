@@ -124,3 +124,51 @@ body {
   border: 3rem solid white;
   box-shadow: 0 2rem 5rem 1rem rgba(0, 0, 0, 0.1);
 }
+
+/*
+Custom added css for custom added features
+  <div class="search-container">
+        <button>Search For Country</button>
+        <input type="text" class="country-input-search" />
+      </div>
+*/
+
+.search-container {
+  margin: 15rem auto 0 auto;
+
+  display: flex;
+  gap: 2.5rem;
+  justify-content: center;
+}
+
+.search-container button {
+  padding: 1rem 1.5rem;
+  border: none;
+  border-radius: 9px;
+  text-decoration: none;
+  background-color: #84cc16;
+  color: #111827;
+  font-size: 2.3rem;
+  font-weight: 600;
+}
+
+.search-container button:hover {
+  cursor: pointer;
+}
+
+.search-container input[type='text'] {
+  width: 40rem;
+  padding: 1rem 2rem;
+  font-size: 2.3rem;
+  font-weight: 600;
+  color: #84cc16;
+  border: none;
+  border-bottom: 4px solid #84cc16;
+
+  transition: border-bottom-color 0.5s ease-in;
+}
+
+.search-container input[type='text']:focus {
+  outline: none;
+  border-bottom-color: red;
+}
