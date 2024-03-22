@@ -163,6 +163,7 @@ const getCountryAndNeighbors = function (countryName) {
 };
 */
 
+/*
 //With Fetch API
 const getCountryAndNeighbors = function (countryName) {
   const countries = countriesContainer.querySelectorAll('.country');
@@ -309,14 +310,115 @@ const getCountryAndNeighbors = function (countryName) {
       console.log('triggered');
     });
 };
+*/
+
+//With Fetch API - Refactored - Old versions are purposely left, for learning reasons
+const getCountryAndNeighbors = function (countryName) {
+  const countries = countriesContainer.querySelectorAll('.country');
+  countries.forEach(el => el.remove());
+  countriesContainer.style.opacity = 0;
+
+  const neighborsData = {
+    neighbor1Code: undefined,
+    neighbor2Code: undefined,
+  };
+
+  // prettier-ignore
+  const getJSON = (urlEndpoint, errorMessage = 'Error - Something went wrong') => {
+    return fetch(urlEndpoint).then(initialResponse => {
+      if (initialResponse.status !== 200) {
+        throw new Error(errorMessage);
+      }
+
+      return initialResponse.json();
+    });
+  };
+
+  const getCountryData = function (readStreamData) {
+    const [countryData] = readStreamData;
+
+    const {
+      name: { common },
+      flags: { svg },
+      region,
+      population,
+      languages,
+      currencies,
+    } = countryData;
+
+    const [language] = Object.values(languages);
+    const [currencyData] = Object.values(currencies);
+    const { name, symbol } = currencyData;
+
+    return {
+      common,
+      svg,
+      region,
+      population,
+      language,
+      currencyData,
+      name,
+      symbol,
+    };
+  };
+
+  //Country 1 - Main
+  const urlEndpoint = `https://restcountries.com/v3.1/name/${countryName}`;
+  getJSON(urlEndpoint, 'Error Country - No such country exists.')
+    .then(readStreamData => {
+      //Selected country has no neighbors
+      if (!readStreamData[0]?.borders || readStreamData[0].borders.length < 2) {
+        throw new Error(
+          'Country has neighbors - neighbors < 2. Search another country.'
+        );
+      }
+
+      //Crafting Main Country
+      countriesContainer.append(
+        craftArticleElement(getCountryData(readStreamData))
+      );
+
+      const [neighbor1Code, neighbor2Code, ...neighborsRest] =
+        readStreamData[0]?.borders;
+
+      neighborsData.neighbor1Code = neighbor1Code;
+      neighborsData.neighbor2Code = neighbor2Code;
+
+      return getJSON(`https://restcountries.com/v3.1/alpha/${neighbor1Code}`);
+    })
+    .then(readStreamData => {
+      countriesContainer.append(
+        craftArticleElement(getCountryData(readStreamData), 'neighbor')
+      );
+
+      return getJSON(
+        `https://restcountries.com/v3.1/alpha/${neighborsData.neighbor2Code}`
+      );
+    })
+    .then(readStreamData => {
+      countriesContainer.append(
+        craftArticleElement(getCountryData(readStreamData), 'neighbor')
+      );
+    })
+    .catch(error => {
+      window.alert(error.message);
+    })
+    .finally(function () {
+      //To trigger transition animation and reveal elements
+      countriesContainer.style.opacity = 1;
+      console.log('triggered');
+    });
+};
 
 function craftArticleElement(
-  imgSource,
-  countryName,
-  countryRegion,
-  population,
-  language,
-  currency,
+  {
+    svg: imgSource,
+    common: countryName,
+    region: countryRegion,
+    population: population,
+    language: language,
+    name: currency,
+  },
   neighborClass = ''
 ) {
   const article = document.createElement('article');
