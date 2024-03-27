@@ -172,3 +172,44 @@ Custom added css for custom added features
   outline: none;
   border-bottom-color: red;
 }
+
+.geo-panel {
+  display: flex;
+  gap: 2.3rem;
+  align-items: center;
+  padding: 2rem 1.5rem;
+  margin-top: 3rem;
+}
+
+.span-geo-details {
+  font-size: 2rem;
+  font-weight: 500;
+  color: #84cc16;
+}
+
+.container-coords {
+  margin-top: 3rem;
+  font-size: 2rem;
+
+  justify-content: center;
+
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.container-coords input {
+  text-indent: 2rem;
+  font-size: 2rem;
+  width: 20%;
+  height: 4rem;
+
+  border: none;
+  border-radius: 13px;
+}
+
+/* Adjust the placeholder indentation */
+.container-coords input::placeholder {
+  text-indent: 2rem; /* Negative value equal to padding-right */
+  font-size: 1.5rem;
+}
