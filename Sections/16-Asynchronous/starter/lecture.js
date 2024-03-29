@@ -1,12 +1,56 @@
 ///////////////////////////////////////
 // The Event Loop in Practice
-console.log('Test start');
-
+//console.log('Test start');
+/*
 setTimeout(() => console.log('0 sec timer'), 0);
 Promise.resolve('Resolved promise 1').then(res => console.log(res));
 Promise.resolve('Resolved promise 2').then(res => {
   for (let i = 0; i < 1_0000_000_000; i++) {}
   console.log(res);
 });
+*/
+//console.log('Test end');
 
-console.log('Test end');
+///////////////////////////////////////
+// Building a Simple Promise
+/*
+const lotteryPromise = new Promise(function (resolve, reject) {
+  console.log('Lottery draw is happening!');
+
+  setTimeout(function () {
+    if (Math.random() >= 0.5) {
+      resolve('You WIN the lottery!');
+    } else {
+      reject(new Error('You lost your money!'));
+    }
+  }, 2000);
+});
+
+lotteryPromise
+  .then(res => {
+    console.log(res);
+  })
+  .catch(err => console.log(err));
+*/
+
+const promiseExecutor = function (resolvedState, rejectedState) {
+  console.log(
+    'Executor fn executes as soon as Promise obj is created through the Promise c-tor'
+  );
+
+  const randomNum = Math.random();
+
+  const timerHandler = function () {
+    if (randomNum >= 0.5) {
+      resolvedState('1: Resolved');
+    } else {
+      rejectedState('0: Rejected');
+    }
+  };
+
+  setTimeout(timerHandler, 2000);
+};
+const lotteryPromise = new Promise(promiseExecutor);
+lotteryPromise
+  .then(resultValue => console.log(resultValue))
+  .catch(errValue => console.log(errValue));
