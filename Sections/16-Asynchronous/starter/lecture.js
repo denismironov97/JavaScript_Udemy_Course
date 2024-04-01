@@ -64,6 +64,7 @@ lotteryPromise
 
 console.log('Execution begins');
 
+/*
 const timeoutPromiseFn = function (seconds) {
   const promiseWrapper = new Promise(function executor(resolve, reject) {
     setTimeout(function () {
@@ -86,3 +87,35 @@ timeoutPromiseFn(3)
     return timeoutPromiseFn(1);
   })
   .then(result => console.log(result));
+
+*/
+
+const geolocationPromisifiedWrapper = function () {
+  /*
+  const promiseWrapper = new Promise(function executor(resolveFn, rejectFn) {
+    navigator.geolocation.getCurrentPosition(
+      function success(positionObj) {
+        resolveFn(positionObj.coords);
+      },
+      function errorCallback(errorObj) {
+        rejectFn(errorObj);
+      }
+    );
+  });
+  */
+  const promiseWrapper = new Promise(function executor(resolveFn, rejectFn) {
+    navigator.geolocation.getCurrentPosition(resolveFn, rejectFn);
+  });
+
+  return promiseWrapper;
+};
+
+geolocationPromisifiedWrapper()
+  .then(result => {
+    console.log(result);
+  })
+  .catch(error => {
+    console.log(error);
+  });
+
+console.log('Execution ends.');
