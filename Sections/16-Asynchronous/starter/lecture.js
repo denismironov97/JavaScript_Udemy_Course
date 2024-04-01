@@ -1,3 +1,5 @@
+'use strict';
+
 ///////////////////////////////////////
 // The Event Loop in Practice
 //console.log('Test start');
@@ -33,6 +35,7 @@ lotteryPromise
   .catch(err => console.log(err));
 */
 
+/*
 const promiseExecutor = function (resolvedState, rejectedState) {
   console.log(
     'Executor fn executes as soon as Promise obj is created through the Promise c-tor'
@@ -41,6 +44,7 @@ const promiseExecutor = function (resolvedState, rejectedState) {
   const randomNum = Math.random();
 
   const timerHandler = function () {
+    // random num, resolvedState-fn, rejectedState-fn are accessed thanks through closure
     if (randomNum >= 0.5) {
       resolvedState('1: Resolved');
     } else {
@@ -54,3 +58,31 @@ const lotteryPromise = new Promise(promiseExecutor);
 lotteryPromise
   .then(resultValue => console.log(resultValue))
   .catch(errValue => console.log(errValue));
+*/
+
+//Promisify-ing callback based operations, wrapper training
+
+console.log('Execution begins');
+
+const timeoutPromiseFn = function (seconds) {
+  const promiseWrapper = new Promise(function executor(resolve, reject) {
+    setTimeout(function () {
+      resolve(`Waited for ${seconds}.`);
+    }, seconds * 1000);
+  });
+
+  return promiseWrapper;
+};
+
+timeoutPromiseFn(3)
+  .then(function (result) {
+    console.log(result);
+
+    return timeoutPromiseFn(5);
+  })
+  .then(result => {
+    console.log(result);
+
+    return timeoutPromiseFn(1);
+  })
+  .then(result => console.log(result));
