@@ -25,6 +25,13 @@ GOOD LUCK 😀
 const imgElement = document.querySelector('.image-container img');
 //src path - http://127.0.0.1:8080/imgs/img-3.jpg
 
+const changeImgSourcePath = function (secondsArg = 0) {
+  imgElement.src = `http://127.0.0.1:8080/imgs/img-${indexPath}.jpg`;
+  indexPath++;
+
+  return setTimeoutPromiseWrapper(secondsArg);
+};
+
 const setTimeoutPromiseWrapper = function (seconds) {
   const promiseWrapper = new Promise(function executor(resolveFn, rejectFn) {
     setTimeout(function timerHandler() {
@@ -35,21 +42,19 @@ const setTimeoutPromiseWrapper = function (seconds) {
   return promiseWrapper;
 };
 
-let num = 1;
-setTimeoutPromiseWrapper(4)
+let indexPath = 1;
+setTimeoutPromiseWrapper(2)
   .then(() => {
-    imgElement.src = `http://127.0.0.1:8080/imgs/img-${num}.jpg`;
-    num++;
-
-    return setTimeoutPromiseWrapper(4);
+    return changeImgSourcePath(2);
   })
   .then(() => {
-    imgElement.src = `http://127.0.0.1:8080/imgs/img-${num}.jpg`;
-    num++;
-
-    return setTimeoutPromiseWrapper(4);
+    return changeImgSourcePath(2);
   })
   .then(() => {
-    imgElement.src = `http://127.0.0.1:8080/imgs/img-${num}.jpg`;
+    changeImgSourcePath();
+    return setTimeoutPromiseWrapper(5);
   })
-  .finally(() => {});
+  .catch(err => console.error(err))
+  .finally(() => {
+    imgElement.style.display = 'none';
+  });
