@@ -42,17 +42,24 @@ const setTimeoutPromiseWrapper = function (seconds) {
   return promiseWrapper;
 };
 
+console.log('Wait for 5 seconds to pass before start to switch img-s.');
+
 let indexPath = 1;
-setTimeoutPromiseWrapper(2)
+setTimeoutPromiseWrapper(5)
   .then(() => {
+    console.log('Loaded img 1');
+
     return changeImgSourcePath(2);
   })
   .then(() => {
+    console.log('Loaded img 2');
+
     return changeImgSourcePath(2);
   })
   .then(() => {
-    changeImgSourcePath();
-    return setTimeoutPromiseWrapper(5);
+    console.log('Loaded img 3');
+
+    return changeImgSourcePath(5);
   })
   .catch(err => console.error(err))
   .finally(() => {
