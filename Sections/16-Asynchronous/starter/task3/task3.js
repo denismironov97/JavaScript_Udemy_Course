@@ -73,6 +73,8 @@ console.log('start...');
 const imgElement = document.querySelector('.image-container img');
 //src path - http://127.0.0.1:8080/imgs/img-1.jpg
 
+const spanElem = document.querySelector('.number-container span');
+
 let indexPath = 1;
 
 const setTimeoutPromisified = async function (timeInSeconds) {
@@ -95,13 +97,16 @@ const redirectImgPath = function (indexPathArg) {
 };
 
 try {
-  waitAsyncHandler(4)
+  waitAsyncHandler(5)
     .then(function () {
       console.log('img path redirect-2');
-      return waitAsyncHandler(4);
+      spanElem.textContent = 2;
+
+      return waitAsyncHandler(3);
     })
     .then(() => {
       console.log('img path redirect-3');
+      spanElem.textContent = 3;
     });
 } catch (error) {
   console.log(error.message);
