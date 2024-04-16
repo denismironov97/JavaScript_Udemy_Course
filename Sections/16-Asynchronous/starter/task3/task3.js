@@ -70,11 +70,14 @@ createImage('img/img-1.jpg')
 //-----------------------------------------------------------------------------
 console.log('start...');
 
-const imgElement = document.querySelector('.image-container img');
+//const imgElement = document.querySelector('.image-container img');
 //src path - http://127.0.0.1:8080/imgs/img-1.jpg
+//const spanElem = document.querySelector('.number-container span');
 
-const spanElem = document.querySelector('.number-container span');
+const imgContainer = document.querySelector('.image-container');
 
+// Part 1 ver 1
+/*
 let indexPath = 1;
 
 const setTimeoutPromisified = async function (timeInSeconds) {
@@ -111,6 +114,97 @@ try {
 } catch (error) {
   console.log(error.message);
 }
+*/
+
+//Part 1 ver 2
+const setTimeoutPromisified = function (seconds) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, seconds * 1000);
+  });
+};
+
+const createImage = function (imgPath) {
+  return new Promise(function (resolve, reject) {
+    const img = document.createElement('img');
+    img.src = imgPath;
+
+    img.addEventListener('load', function () {
+      imgContainer.append(img);
+      resolve(img);
+    });
+
+    img.addEventListener('error', function () {
+      reject(new Error('Image not found'));
+    });
+  });
+};
+
+/*
+let currentImg;
+
+createImage('imgs/img-1.jpg')
+  .then(img => {
+    currentImg = img;
+    console.log('Image 1 loaded');
+    return setTimeoutPromisified(3);
+  })
+  .then(() => {
+    currentImg.style.display = 'none';
+    return createImage('imgs/img-2.jpg');
+  })
+  .then(img => {
+    currentImg = img;
+    console.log('Image 2 loaded');
+    return setTimeoutPromisified(3);
+  })
+  .then(() => {
+    currentImg.style.display = 'none';
+    const imgElem3 = createImage('imgs/img-3.jpg');
+
+    return imgElem3;
+  })
+  .then(imgElem => {
+    currentImg = imgElem;
+    console.log('Image 3 loaded');
+
+    return setTimeoutPromisified(3);
+  })
+  .then(() => {
+    currentImg.style.display = 'none';
+  })
+  .catch(err => console.error(err));
+  */
+
+const loadNPause = async function () {
+  try {
+    //When await keyword is interpreted it automatically releases the current
+    //functional execution context/execution context from the call stack
+    let currImgElement = await createImage('imgs/img-1.jpg');
+    console.log('Image 1 loaded');
+
+    await setTimeoutPromisified(10).then(
+      () => (currImgElement.style.display = 'none')
+    );
+
+    currImgElement = await createImage('imgs/img-2.jpg');
+    console.log('Image 2 loaded');
+
+    await setTimeoutPromisified(10).then(
+      () => (currImgElement.style.display = 'none')
+    );
+
+    currImgElement = await createImage('imgs/img-3.jpg');
+    console.log('Image 3 loaded');
+
+    await setTimeoutPromisified(10).then(
+      () => (currImgElement.style.display = 'none')
+    );
+  } catch (err) {
+    console.log(err.message);
+  }
+};
+
+loadNPause();
 
 //-----------------------------------------------------------------------------
 console.log('finished, completed!');
