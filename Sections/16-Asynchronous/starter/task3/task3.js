@@ -182,25 +182,29 @@ const loadNPause = async function () {
     let currImgElement = await createImage('imgs/img-1.jpg');
     console.log('Image 1 loaded');
 
-    await setTimeoutPromisified(10).then(
-      () => (currImgElement.style.display = 'none')
-    );
+    await setTimeoutPromisified(10);
+
+    hideImgElem(currImgElement);
 
     currImgElement = await createImage('imgs/img-2.jpg');
     console.log('Image 2 loaded');
 
-    await setTimeoutPromisified(10).then(
-      () => (currImgElement.style.display = 'none')
-    );
+    await setTimeoutPromisified(10);
+
+    hideImgElem(currImgElement);
 
     currImgElement = await createImage('imgs/img-3.jpg');
     console.log('Image 3 loaded');
 
-    await setTimeoutPromisified(10).then(
-      () => (currImgElement.style.display = 'none')
-    );
+    await setTimeoutPromisified(10);
+
+    hideImgElem(currImgElement);
   } catch (err) {
     console.log(err.message);
+  }
+
+  function hideImgElem(imgElem) {
+    imgElem.style.display = 'none';
   }
 };
 
