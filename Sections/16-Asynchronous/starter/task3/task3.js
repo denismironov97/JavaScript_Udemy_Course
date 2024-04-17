@@ -208,7 +208,34 @@ const loadNPause = async function () {
   }
 };
 
-loadNPause();
+//loadNPause();
+
+//Part 2
+const imgPathsArr = new Array(
+  'imgs/img-1.jpg',
+  'imgs/img-2.jpg',
+  'imgs/img-3.jpg'
+);
+
+const loadAll = async function (imgPathsArrArg) {
+  try {
+    const promisesArr = imgPathsArrArg.map(async function (currImgPath) {
+      return await createImage(currImgPath);
+    });
+
+    console.log('Printing something before fn exec context disconnect');
+
+    const imgsElementsArr = await Promise.all(promisesArr);
+
+    console.log('Printing something AFTER fn exec context RESUMES');
+
+    console.log(imgsElementsArr);
+  } catch (error) {
+    console.log(`Error: ${error.message} ---.`);
+  }
+};
+
+loadAll(imgPathsArr);
 
 //-----------------------------------------------------------------------------
 console.log('finished, completed!');

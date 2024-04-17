@@ -16,7 +16,7 @@ body {
 
 .image-container {
   max-width: 65rem;
-  height: 40rem;
+  min-height: 40rem;
   margin: 20rem auto 0 auto;
 }
 
