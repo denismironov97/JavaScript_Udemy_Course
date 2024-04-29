@@ -10,4 +10,9 @@ export const addToCart = function (product, quantity) {
   console.log(`${quantity} ${product} added to cart`);
 };
 
+const totalPrice = 237;
+const totalQuantity = 23;
+// renaming exporting variables
+export { totalPrice, totalQuantity as tq };
+
 console.log('Executing code of exporting module line --- 2');
