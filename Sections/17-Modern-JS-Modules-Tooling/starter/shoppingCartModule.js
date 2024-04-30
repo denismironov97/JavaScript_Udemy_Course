@@ -10,9 +10,15 @@ export const addToCart = function (product, quantity) {
   console.log(`${quantity} ${product} added to cart`);
 };
 
+console.log('Executing code of exporting module line --- 2');
+
+const stringVar = 'variable of type string';
+
 const totalPrice = 237;
 const totalQuantity = 23;
 // renaming exporting variables
 export { totalPrice, totalQuantity as tq };
 
-console.log('Executing code of exporting module line --- 2');
+console.log('variable: ', stringVar);
+
+console.log('Executing code of exporting module line --- 3');
