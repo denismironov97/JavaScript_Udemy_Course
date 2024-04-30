@@ -19,6 +19,7 @@ console.log(totalCost);
 //console.log(totalPrice);//Error! - Uncaught ReferenceError: totalPrice is not defined
 */
 
+/*
 //Import everything that's been exported as object containing everything
 import * as ModuleObject from './shoppingCartModule.js';
 
@@ -29,3 +30,13 @@ console.log(ModuleObject.cart);
 
 console.log(ModuleObject.totalPrice);
 console.log(ModuleObject.tq);
+*/
+
+import CatClass from './shoppingCartModule.js';
+
+const cat = new CatClass('Winston', 3, 'black');
+
+console.log(cat);
+
+console.log(cat.getCatStats());
+console.log(cat.sayMeow());

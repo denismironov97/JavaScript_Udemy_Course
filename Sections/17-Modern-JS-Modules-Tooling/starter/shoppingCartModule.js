@@ -22,3 +22,26 @@ export { totalPrice, totalQuantity as tq };
 console.log('variable: ', stringVar);
 
 console.log('Executing code of exporting module line --- 3');
+
+//export statements are non-blocking operations
+//can only have one default export statement per module
+//export default
+export default class Cat {
+  constructor(name, age, color) {
+    this.name = name;
+    this.age = age;
+    this.color = color;
+  }
+
+  sayMeow() {
+    return `${this.name} says meow meow`;
+  }
+
+  getCatStats() {
+    return {
+      name: this.name,
+      age: this.age,
+      color: this.color,
+    };
+  }
+}
