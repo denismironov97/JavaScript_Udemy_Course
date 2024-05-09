@@ -32,6 +32,7 @@ console.log(ModuleObject.totalPrice);
 console.log(ModuleObject.tq);
 */
 
+/*
 import CatClass from './shoppingCartModule.js';
 
 const cat = new CatClass('Winston', 3, 'black');
@@ -40,3 +41,8 @@ console.log(cat);
 
 console.log(cat.getCatStats());
 console.log(cat.sayMeow());
+*/
+
+import {} from './topLevelAwaitModule.js';
+
+console.log('Executing line - - - 1');
