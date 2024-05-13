@@ -43,6 +43,15 @@ console.log(cat.getCatStats());
 console.log(cat.sayMeow());
 */
 
-import {} from './topLevelAwaitModule.js';
+import { lastPost2 } from './topLevelAwaitModule.js';
+import { shoppingCartAPI } from './modulePatternLegacy.js';
 
 console.log('Executing line - - - 1');
+console.log(lastPost2);
+
+shoppingCartAPI.addToCart('pizza', 3);
+shoppingCartAPI.addToCart('garlic sauce', 5);
+
+shoppingCartAPI.orderStock('dough', 44);
+shoppingCartAPI.orderStock('peperoni', 17);
+shoppingCartAPI.orderStock('tomato sauce', 30);

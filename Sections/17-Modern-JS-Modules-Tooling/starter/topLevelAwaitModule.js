@@ -18,15 +18,15 @@ const getLastPost = async function () {
   return { title: data.at(-1).title, text: data.at(-1).body };
 };
 
-console.log('Last post data:');
+//console.log('Last post data:');
 const lastPost = getLastPost();
-console.log(lastPost);
+//console.log(lastPost);
 
 // Not very clean
-lastPost.then(last => console.log(last));
+//lastPost.then(last => console.log(last));
 
 const lastPost2 = await getLastPost();
-console.log(lastPost2);
+//console.log(lastPost2);
 
 // Returning Values from Async Functions
 const getCountryData = async function (countryName) {
@@ -80,4 +80,6 @@ const asyncHandler = async function () {
 
 //top level await statement allowed only in modules
 const todoData = await getLastToDoTask();
-console.log(todoData);
+//console.log(todoData);
+
+export { lastPost2 };
