@@ -75,3 +75,9 @@ const catDeepCloneCloneStruct = structuredClone(cat);
 
 console.log(catDeepClone);
 console.log(catDeepCloneCloneStruct);
+
+//Common JavaScript Module
+//const { printWrapper } = require('./commonJavaScriptModules.js');
+
+//Requires a js module bundler to work in browser environment
+//printWrapper(1);
