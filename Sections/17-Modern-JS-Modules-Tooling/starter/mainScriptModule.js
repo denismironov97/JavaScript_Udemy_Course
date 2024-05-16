@@ -45,6 +45,7 @@ console.log(cat.sayMeow());
 
 import { lastPost2 } from './topLevelAwaitModule.js';
 import { shoppingCartAPI } from './modulePatternLegacy.js';
+import cloneDeepDef from '/node_modules/lodash-es/cloneDeep.js';
 
 console.log('Executing line - - - 1');
 console.log(lastPost2);
@@ -55,3 +56,22 @@ shoppingCartAPI.addToCart('garlic sauce', 5);
 shoppingCartAPI.orderStock('dough', 44);
 shoppingCartAPI.orderStock('peperoni', 17);
 shoppingCartAPI.orderStock('tomato sauce', 30);
+
+const cat = {
+  paws: {
+    pawOne: 'black',
+    pawTwo: 'orange',
+    pawThree: 'grey',
+    pawFour: 'white',
+  },
+  name: 'Sharo',
+  age: 4,
+};
+
+const catDeepClone = cloneDeepDef(cat);
+
+//Provided in newer versions on Node.JS
+const catDeepCloneCloneStruct = structuredClone(cat);
+
+console.log(catDeepClone);
+console.log(catDeepCloneCloneStruct);
