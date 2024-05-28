@@ -45,7 +45,9 @@ console.log(cat.sayMeow());
 
 import { lastPost2 } from './topLevelAwaitModule.js';
 import { shoppingCartAPI } from './modulePatternLegacy.js';
-import cloneDeepDef from '/node_modules/lodash-es/cloneDeep.js';
+
+// No need to specify the entire path to the lib bundling tools will find them based on lib name provided
+import cloneDeepDef from 'lodash-es';
 
 console.log('Executing line - - - 1');
 console.log(lastPost2);
@@ -81,3 +83,8 @@ console.log(catDeepCloneCloneStruct);
 
 //Requires a js module bundler to work in browser environment
 //printWrapper(1);
+
+//Parcel hot module replacement
+if (module.hot) {
+  module.hot.accept();
+}

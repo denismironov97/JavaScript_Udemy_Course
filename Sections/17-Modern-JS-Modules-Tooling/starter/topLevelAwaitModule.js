@@ -25,7 +25,7 @@ const lastPost = getLastPost();
 // Not very clean
 //lastPost.then(last => console.log(last));
 
-const lastPost2 = await getLastPost();
+//const lastPost2 = await getLastPost();
 //console.log(lastPost2);
 
 // Returning Values from Async Functions
@@ -79,7 +79,7 @@ const asyncHandler = async function () {
 //asyncHandler();
 
 //top level await statement allowed only in modules
-const todoData = await getLastToDoTask();
+//const todoData = await getLastToDoTask();
 //console.log(todoData);
 
-export { lastPost2 };
+//export { lastPost2 };
