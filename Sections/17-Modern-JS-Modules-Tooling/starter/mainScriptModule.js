@@ -49,6 +49,9 @@ import { shoppingCartAPI } from './modulePatternLegacy.js';
 // No need to specify the entire path to the lib bundling tools will find them based on lib name provided
 import cloneDeepDef from 'lodash-es';
 
+import 'core-js/stable';
+import 'regenerator-runtime';
+
 console.log('Executing line - - - 1');
 console.log(lastPost2);
 
