@@ -21,6 +21,8 @@ export function customCreateElement(tagEl, attributes = undefined, ...params) {
     }
 
     // Adding classes
-    classArr.forEach(currClass => element.classList.add(currClass));
+    classArr?.forEach(currClass => element.classList.add(currClass));
   }
+
+  return element;
 }
