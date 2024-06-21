@@ -3,6 +3,12 @@
 //Importing svg-s from source dir to use them in distribution dir
 import iconsSVG from 'url:../img/icons.svg';
 
+//Polyfilling ES features
+import 'core-js/stable';
+
+//Polyfilling async/await
+import 'regenerator-runtime/runtime';
+
 const recipeContainer = document.querySelector('.recipe');
 
 /*
