@@ -18,6 +18,8 @@ const timeout = function (s) {
 */
 
 const getRecipeDataById = async function (recipeId) {
+  renderSpinnerAnimation(recipeContainer);
+
   try {
     const initialRes = await fetch(
       `https://forkify-api.herokuapp.com/api/v2/recipes/${recipeId}`
@@ -32,6 +34,9 @@ const getRecipeDataById = async function (recipeId) {
     const {
       data: { recipe },
     } = await initialRes.json();
+
+    //Removing rendered spinner element
+    recipeContainer.firstElementChild.remove();
 
     const regExPattern = /_([a-z])/g;
     const replacementString = function (_, letter) {
@@ -163,4 +168,17 @@ const constructRecipe = function ({
   recipeContainer.insertAdjacentHTML('afterbegin', recipeMarkup);
 };
 
-//getRecipeDataById('5ed6604591c37cdc054bc886');
+const renderSpinnerAnimation = parentElem => {
+  const spinnerMarkup = `
+  <div class="spinner">
+          <svg>
+            <use href="${iconsSVG}.svg#icon-loader"></use>
+          </svg>
+        </div>
+  `;
+
+  parentElem.innerHTML = '';
+  parentElem.insertAdjacentHTML('afterbegin', spinnerMarkup);
+};
+
+getRecipeDataById('5ed6604591c37cdc054bc886');
