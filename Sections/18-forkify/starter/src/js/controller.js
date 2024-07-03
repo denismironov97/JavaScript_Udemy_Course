@@ -24,19 +24,17 @@ const timeout = function (s) {
 // https://forkify-api.herokuapp.com/v2
 */
 
-//recipeId, arg1, arg2
-const getRecipeDataById = async function (ev) {
-  renderSpinnerAnimation(recipeContainer);
+const getRecipeDataById = async function (event) {
+  const recipeId = this.hash.slice(1);
 
-  console.log('this', this);
-  console.log('event', ev);
+  console.log(recipeId);
 
-  /*
   try {
-    if(!recipeId) {
+    if (!recipeId) {
       throw new Error('Missing hash to perform id request');
     }
 
+    renderSpinnerAnimation(recipeContainer);
 
     const initialRes = await fetch(
       `https://forkify-api.herokuapp.com/api/v2/recipes/${recipeId}`
@@ -52,8 +50,8 @@ const getRecipeDataById = async function (ev) {
       data: { recipe },
     } = await initialRes.json();
 
-    //Removing rendered spinner element
-    recipeContainer.firstElementChild.remove();
+    //Removing rendered spinner element + clear previous constructed recipe
+    recipeContainer.innerHTML = '';
 
     const regExPattern = /_([a-z])/g;
     const replacementString = function (_, letter) {
@@ -77,9 +75,8 @@ const getRecipeDataById = async function (ev) {
 
     renderRecipe(recipeData);
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
   }
-  */
 };
 
 const renderRecipe = function ({
@@ -199,11 +196,8 @@ const renderSpinnerAnimation = parentElem => {
   parentElem.insertAdjacentHTML('afterbegin', spinnerMarkup);
 };
 
-//getRecipeDataById('5ed6604591c37cdc054bc886');
-
-windowEventTypes.forEach(currEvType => {
-  window.addEventListener(
-    currEvType,
-    getRecipeDataById.bind(window.location.hash)
-  );
-});
+// bind returns a new function with a fixed this context variable
+//window.addEventListener('hashchange', getRecipeDataById.bind(window.location));
+windowEventTypes.forEach(currEv =>
+  window.addEventListener(currEv, getRecipeDataById.bind(window.location))
+);
