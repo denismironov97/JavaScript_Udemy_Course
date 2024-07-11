@@ -3,6 +3,9 @@
 //Importing svg-s from source dir to use them in distribution dir
 import iconsSVG from 'url:../../img/icons.svg';
 
+//Importing fractional from fractional library
+import { Fraction } from 'fractional';
+
 class RecipeView {
   #parentElement = document.querySelector('.recipe');
   #data;
@@ -127,6 +130,10 @@ class RecipeView {
 
   #generateIngredientsMarkup({ quantity, unit, description }) {
     (quantity ??= ''), (unit ??= '');
+
+    if (quantity) {
+      quantity = new Fraction(quantity).toString();
+    }
 
     return `
     <li class="recipe__ingredient">
