@@ -2,25 +2,18 @@
 
 import { async } from 'regenerator-runtime';
 
+import { API_URL } from './config.js';
+import { getJSONData } from './utils.js';
+
 export const state = {
   recipe: undefined,
 };
 
 export const loadRecipeData = async function (id) {
   try {
-    const initialRes = await fetch(
-      `https://forkify-api.herokuapp.com/api/v2/recipes/${id}`
-    );
+    const recipe = await getJSONData(`${API_URL}/${id}`);
 
-    if (!initialRes.ok) {
-      throw new Error(
-        `Initial server response failed -> status code: ${initialRes.status} status text: ${initialRes.statusText}!`
-      );
-    }
-
-    const {
-      data: { recipe },
-    } = await initialRes.json();
+    console.log('warTooth', recipe);
 
     const regExPattern = /_([a-z])/g;
     const replacementString = function (_, letter) {
