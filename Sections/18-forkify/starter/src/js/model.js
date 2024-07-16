@@ -13,7 +13,7 @@ export const loadRecipeData = async function (id) {
   try {
     const recipe = await getJSONData(`${API_URL}/${id}`);
 
-    console.log('warTooth', recipe);
+    console.log('recipe: ', recipe);
 
     const regExPattern = /_([a-z])/g;
     const replacementString = function (_, letter) {
@@ -35,6 +35,7 @@ export const loadRecipeData = async function (id) {
 
     state.recipe = recipeData;
   } catch (error) {
-    console.error(error.message);
+    console.error(`Error from model -> ${error.message}`);
+    throw error;
   }
 };

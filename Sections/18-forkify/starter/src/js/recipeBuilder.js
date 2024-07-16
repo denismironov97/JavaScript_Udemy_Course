@@ -1,5 +1,6 @@
 import { customCreateElement } from './utils';
 
+/*
 // Construct the markup
 const figure = customCreateElement(
   'figure',
@@ -173,3 +174,4 @@ const recipeDirections = customCreateElement(
 // Constructed recipe
 const fragment = new DocumentFragment();
 fragment.append(figure, recipeDetails, recipeIngredients, recipeDirections);
+*/

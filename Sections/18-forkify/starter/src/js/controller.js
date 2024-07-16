@@ -35,7 +35,7 @@ const controlRecipes = async function (event) {
 
     console.log(model.state.recipe);
   } catch (error) {
-    console.error(error.message);
+    console.error(`Error from controller -> ${error.message}`);
   }
 };
 

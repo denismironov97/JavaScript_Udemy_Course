@@ -1,3 +1,49 @@
+'use strict';
+
+import { TIMEOUT_SECONDS } from './config.js';
+
+export const getJSONData = async function (endpoint) {
+  try {
+    const timeoutPromiseWrapper = requestTimeout(TIMEOUT_SECONDS);
+
+    const initialServerRes = fetch(endpoint);
+
+    // Promise race condition between fetch data request and wrapped promise timeout.
+    const promiseResult = await Promise.race([
+      initialServerRes,
+      timeoutPromiseWrapper,
+    ]);
+
+    if (!promiseResult.ok) {
+      throw new Error(
+        `Initial server response failed -> status code: ${promiseResult.status} status text: ${promiseResult.statusText}!`
+      );
+    }
+
+    const {
+      data: { recipe },
+    } = await promiseResult.json();
+
+    return recipe;
+  } catch (error) {
+    console.error(`Error from utils -> ${error.message}`);
+    throw error;
+  }
+};
+
+// https://forkify-api.herokuapp.com/v2
+const requestTimeout = function (seconds) {
+  return new Promise(function executor(_, reject) {
+    setTimeout(function callback() {
+      reject(
+        new Error(
+          `Request took too long! Timeout after ${seconds} seconds passed.`
+        )
+      );
+    }, seconds * 1000);
+  });
+};
+
 export function customCreateElement(tagEl, attributes = undefined, ...params) {
   const element = document.createElement(tagEl);
   const textValue = params[0];
@@ -26,35 +72,3 @@ export function customCreateElement(tagEl, attributes = undefined, ...params) {
 
   return element;
 }
-
-export const getJSONData = async function (endpoint) {
-  try {
-    const initialRes = await fetch(endpoint);
-
-    if (!initialRes.ok) {
-      throw new Error(
-        `Initial server response failed -> status code: ${initialRes.status} status text: ${initialRes.statusText}!`
-      );
-    }
-
-    const {
-      data: { recipe },
-    } = await initialRes.json();
-
-    return recipe;
-  } catch (err) {
-    console.error(`Error from utils.js script file -> ${err.message}`);
-  }
-};
-
-/*
-const timeout = function (s) {
-  return new Promise(function (_, reject) {
-    setTimeout(function () {
-      reject(new Error(`Request took too long! Timeout after ${s} second`));
-    }, s * 1000);
-  });
-};
-
-// https://forkify-api.herokuapp.com/v2
-*/
