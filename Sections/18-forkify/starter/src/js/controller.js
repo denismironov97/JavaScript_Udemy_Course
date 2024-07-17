@@ -12,9 +12,6 @@ import * as model from '../js/model.js';
 //Views
 import recipeView from '../js/views/recipeView.js';
 
-const recipeContainer = document.querySelector('.recipe');
-const windowEventTypes = ['load', 'hashchange'];
-
 const controlRecipes = async function (event) {
   const recipeId = window.location.hash.slice(1);
 
@@ -39,6 +36,9 @@ const controlRecipes = async function (event) {
   }
 };
 
-windowEventTypes.forEach(currEv =>
-  window.addEventListener(currEv, controlRecipes)
-);
+const init = function () {
+  //Subscriber
+  recipeView.addHandlerRender(controlRecipes);
+};
+
+init();

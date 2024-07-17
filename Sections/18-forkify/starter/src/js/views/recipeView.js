@@ -9,8 +9,16 @@ import { Fraction } from 'fractional';
 class RecipeView {
   #parentElement = document.querySelector('.recipe');
   #data;
+  #windowEventTypes = ['load', 'hashchange'];
 
   constructor() {}
+
+  //Publisher
+  addHandlerRender(handlerCallbackFn) {
+    this.#windowEventTypes.forEach(currEv =>
+      window.addEventListener(currEv, handlerCallbackFn)
+    );
+  }
 
   render(valueData) {
     this.#data = valueData;
