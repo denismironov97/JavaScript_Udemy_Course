@@ -11,6 +11,10 @@ class RecipeView {
   #data;
   #windowEventTypes = ['load', 'hashchange'];
 
+  #errorMessage =
+    'Problem with loading current recipe. Search for another similar recipe';
+  #successMessage = '';
+
   constructor() {}
 
   //Publisher
@@ -39,6 +43,35 @@ class RecipeView {
 
     this.#clear();
     this.#parentElement.insertAdjacentHTML('afterbegin', spinnerMarkup);
+  }
+
+  renderSuccessMessage(successMessage = this.#successMessage) {
+    const markup = `
+    <div class="message">
+      <div>
+        <svg>
+          <use href="${iconsSVG}.svg#icon-smile"></use>
+        </svg>
+      </div>
+      <p>${successMessage}</p>
+    </div>
+    `;
+  }
+
+  renderError(errorMessage = this.#errorMessage) {
+    const markup = `
+    <div class="error">
+      <div>
+        <svg>
+          <use href="${iconsSVG}.svg#icon-alert-triangle"></use>
+        </svg>
+      </div>
+      <p>${errorMessage}</p>
+    </div>
+    `;
+
+    this.#clear();
+    this.#parentElement.insertAdjacentHTML('afterbegin', markup);
   }
 
   #clear() {

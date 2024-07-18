@@ -13,8 +13,6 @@ export const loadRecipeData = async function (id) {
   try {
     const recipe = await getJSONData(`${API_URL}/${id}`);
 
-    console.log('recipe: ', recipe);
-
     const regExPattern = /_([a-z])/g;
     const replacementString = function (_, letter) {
       return letter.toUpperCase();
