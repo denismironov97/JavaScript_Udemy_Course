@@ -3,7 +3,7 @@
 import { async } from 'regenerator-runtime';
 
 import { API_URL } from './config.js';
-import { getJSONData } from './utils.js';
+import { getJSONData, restructureObjectKeys } from './utils.js';
 
 export const state = {
   recipe: undefined,
@@ -11,29 +11,28 @@ export const state = {
 
 export const loadRecipeData = async function (id) {
   try {
-    const recipe = await getJSONData(`${API_URL}/${id}`);
+    const {
+      data: { recipe },
+    } = await getJSONData(`${API_URL}/${id}`);
 
-    const regExPattern = /_([a-z])/g;
-    const replacementString = function (_, letter) {
-      return letter.toUpperCase();
-    };
+    const restructuredRecipeData = restructureObjectKeys(recipe);
 
-    const convertToCamelCase = str => {
-      return str.replace(regExPattern, replacementString);
-    };
-
-    const recipeData = Object.entries(recipe).reduce(
-      (acc, [currKey, value]) => {
-        const newKey = convertToCamelCase(currKey);
-        acc[newKey] = value;
-        return acc;
-      },
-      {}
-    );
-
-    state.recipe = recipeData;
+    state.recipe = restructuredRecipeData;
   } catch (error) {
     console.error(`Error from model -> ${error.message}`);
     throw error;
   }
 };
+
+export const loadSearchResults = async function (queryString) {
+  try {
+    const recipesData = await getJSONData(`${API_URL}?search=${queryString}`);
+
+    console.log(recipesData);
+  } catch (error) {
+    console.error(`Error from model -> ${error.message}`);
+    throw error;
+  }
+};
+
+loadSearchResults('pizza');

@@ -20,16 +20,43 @@ export const getJSONData = async function (endpoint) {
       );
     }
 
-    const {
-      data: { recipe },
-    } = await promiseResult.json();
+    const resultData = await promiseResult.json();
 
-    return recipe;
+    return resultData;
   } catch (error) {
     console.error(`Error from utils -> ${error.message}`);
     throw error;
   }
 };
+
+export function restructureObjectKeys(obj) {
+  if (Object.keys(obj).length === 0 || !obj) {
+    throw new Error(
+      'Provided object for key restructuring is either empty obj || null || undefined.'
+    );
+  }
+
+  const regExPattern = /_([a-z])/g;
+
+  const replacementString = function (_, letter) {
+    return letter.toUpperCase();
+  };
+
+  const convertToCamelCase = str => {
+    return str.replace(regExPattern, replacementString);
+  };
+
+  const restructuredObjectKeys = Object.entries(obj).reduce(
+    (acc, [currKey, value]) => {
+      const newKey = convertToCamelCase(currKey);
+      acc[newKey] = value;
+      return acc;
+    },
+    {}
+  );
+
+  return restructuredObjectKeys;
+}
 
 // https://forkify-api.herokuapp.com/v2
 const requestTimeout = function (seconds) {
