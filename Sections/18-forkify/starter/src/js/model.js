@@ -7,6 +7,10 @@ import { getJSONData, restructureObjectKeys } from './utils.js';
 
 export const state = {
   recipe: undefined,
+  search: {
+    query: undefined,
+    results: [],
+  },
 };
 
 export const loadRecipeData = async function (id) {
@@ -26,13 +30,24 @@ export const loadRecipeData = async function (id) {
 
 export const loadSearchResults = async function (queryString) {
   try {
-    const recipesData = await getJSONData(`${API_URL}?search=${queryString}`);
+    const queriedRecipesData = await getJSONData(
+      `${API_URL}?search=${queryString}`
+    );
 
-    console.log(recipesData);
+    const {
+      data: { recipes: recipesArr },
+      results: resultsNum,
+      status,
+    } = queriedRecipesData;
+
+    const queriedRecipesArr = recipesArr.map(currRecipeObj =>
+      restructureObjectKeys(currRecipeObj)
+    );
+
+    state.search.query = queryString;
+    state.search.results = queriedRecipesArr;
   } catch (error) {
     console.error(`Error from model -> ${error.message}`);
     throw error;
   }
 };
-
-loadSearchResults('pizza');

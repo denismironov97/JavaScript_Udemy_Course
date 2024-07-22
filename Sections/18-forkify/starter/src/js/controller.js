@@ -10,7 +10,8 @@ import 'regenerator-runtime/runtime';
 import * as model from '../js/model.js';
 
 //Views
-import recipeView from '../js/views/recipeView.js';
+import recipeView from './views/recipeView.js';
+import searchView from './views/searchView.js';
 
 const controlRecipes = async function (event) {
   const recipeId = window.location.hash.slice(1);
@@ -38,9 +39,36 @@ const controlRecipes = async function (event) {
   }
 };
 
+const controlSearchResults = async function (event) {
+  event.preventDefault();
+
+  try {
+    // 1) Get search query from user
+    const queryString = searchView.getSearchQuery();
+
+    if (!queryString) {
+      return;
+    }
+
+    // 2) Loading search query results, awaiting async operation
+    await model.loadSearchResults(queryString);
+
+    // 3) Render search results
+    console.log('Recipes:');
+    console.log(model.state.search.results);
+  } catch (error) {
+    console.error(`Error from controller -> ${error.message}`);
+
+    //recipeView.renderError(error.message);
+  }
+};
+
 const init = function () {
-  //Subscriber
+  // Subscriber - recipeView
   recipeView.addHandlerRender(controlRecipes);
+
+  // Subscriber - searchView
+  searchView.addHandlerSearch(controlSearchResults);
 };
 
 init();
