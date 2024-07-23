@@ -6,79 +6,26 @@ import iconsSVG from 'url:../../img/icons.svg';
 //Importing fractional from fractional library
 import { Fraction } from 'fractional';
 
-class RecipeView {
-  #parentElement = document.querySelector('.recipe');
-  #data;
-  #windowEventTypes = ['load', 'hashchange'];
+//Importing parent class - ParentView
+import View from './parentView.js';
 
-  #errorMessage =
-    'Problem with loading current recipe. Search for another similar recipe';
-  #successMessage = '';
+class RecipeView extends View {
+  _windowEventTypes = ['load', 'hashchange'];
 
-  constructor() {}
+  constructor() {
+    super();
+
+    this._parentElement = document.querySelector('.recipe');
+  }
 
   //Publisher
   addHandlerRender(handlerCallbackFn) {
-    this.#windowEventTypes.forEach(currEv =>
+    this._windowEventTypes.forEach(currEv =>
       window.addEventListener(currEv, handlerCallbackFn)
     );
   }
 
-  render(valueData) {
-    this.#data = valueData;
-    const markup = this.#generateMarkup();
-
-    this.#clear();
-    this.#parentElement.insertAdjacentHTML('afterbegin', markup);
-  }
-
-  renderSpinnerAnimation() {
-    const spinnerMarkup = `
-    <div class="spinner">
-            <svg>
-              <use href="${iconsSVG}.svg#icon-loader"></use>
-            </svg>
-          </div>
-    `;
-
-    this.#clear();
-    this.#parentElement.insertAdjacentHTML('afterbegin', spinnerMarkup);
-  }
-
-  renderSuccessMessage(successMessage = this.#successMessage) {
-    const markup = `
-    <div class="message">
-      <div>
-        <svg>
-          <use href="${iconsSVG}.svg#icon-smile"></use>
-        </svg>
-      </div>
-      <p>${successMessage}</p>
-    </div>
-    `;
-  }
-
-  renderError(errorMessage = this.#errorMessage) {
-    const markup = `
-    <div class="error">
-      <div>
-        <svg>
-          <use href="${iconsSVG}.svg#icon-alert-triangle"></use>
-        </svg>
-      </div>
-      <p>${errorMessage}</p>
-    </div>
-    `;
-
-    this.#clear();
-    this.#parentElement.insertAdjacentHTML('afterbegin', markup);
-  }
-
-  #clear() {
-    this.#parentElement.innerHTML = '';
-  }
-
-  #generateMarkup() {
+  _generateMarkup() {
     const {
       publisher,
       ingredients,
@@ -88,7 +35,7 @@ class RecipeView {
       servings,
       cookingTime,
       id,
-    } = this.#data;
+    } = this._data;
 
     const recipeMarkup = `
     <figure class="recipe__fig">
@@ -142,7 +89,7 @@ class RecipeView {
     <div class="recipe__ingredients">
       <h2 class="heading--2">Recipe ingredients</h2>
       <ul class="recipe__ingredient-list">
-        ${ingredients.map(this.#generateIngredientsMarkup).join('')}
+        ${ingredients.map(this._generateIngredientsMarkup).join('')}
       </ul>
     </div>
     
@@ -169,7 +116,7 @@ class RecipeView {
     return recipeMarkup;
   }
 
-  #generateIngredientsMarkup({ quantity, unit, description }) {
+  _generateIngredientsMarkup({ quantity, unit, description }) {
     (quantity ??= ''), (unit ??= '');
 
     if (quantity) {
