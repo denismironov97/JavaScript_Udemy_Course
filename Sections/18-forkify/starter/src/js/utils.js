@@ -6,11 +6,11 @@ export const getJSONData = async function (endpoint) {
   try {
     const timeoutPromiseWrapper = requestTimeout(TIMEOUT_SECONDS);
 
-    const initialServerRes = fetch(endpoint);
+    const initialServerResPromise = fetch(endpoint);
 
     // Promise race condition between fetch data request and wrapped promise timeout.
     const promiseResult = await Promise.race([
-      initialServerRes,
+      initialServerResPromise,
       timeoutPromiseWrapper,
     ]);
 

@@ -6,13 +6,18 @@ import iconsSVG from 'url:../../img/icons.svg';
 export default class ParentView {
   _parentElement;
   _data;
-  _errorMessage =
-    'Problem with loading current recipe. Search for another similar recipe';
-  _successMessage = 'Success!';
+  _errorMessage = 'Problem with loading current component. Please try again.';
+  _successMessage = 'Success in loading component!';
 
   constructor() {}
 
   render(valueData) {
+    console.log('Value Data:', valueData);
+
+    if (!valueData || (Array.isArray(valueData) && valueData?.length === 0)) {
+      return this._renderError();
+    }
+
     this._data = valueData;
     const markup = this._generateMarkup();
 
@@ -46,7 +51,7 @@ export default class ParentView {
     `;
   }
 
-  renderError(errorMessage = this._errorMessage) {
+  _renderError(errorMessage = this._errorMessage) {
     const markup = `
     <div class="error">
       <div>

@@ -12,6 +12,12 @@ import * as model from '../js/model.js';
 //Views
 import recipeView from './views/recipeView.js';
 import searchView from './views/searchView.js';
+import resultsView from './views/resultsView.js';
+
+//Hot module reloading
+if (module.hot) {
+  module.hot.accept();
+}
 
 const controlRecipes = async function (event) {
   const recipeId = window.location.hash.slice(1);
@@ -34,8 +40,6 @@ const controlRecipes = async function (event) {
     console.log(model.state.recipe);
   } catch (error) {
     console.error(`Error from controller -> ${error.message}`);
-
-    recipeView.renderError(error.message);
   }
 };
 
@@ -43,6 +47,9 @@ const controlSearchResults = async function (event) {
   event.preventDefault();
 
   try {
+    //Rendering spinner animation before loading and rendering the query food recipes
+    resultsView.renderSpinnerAnimation();
+
     // 1) Get search query from user
     const queryString = searchView.getSearchQuery();
 
@@ -56,10 +63,10 @@ const controlSearchResults = async function (event) {
     // 3) Render search results
     console.log('Recipes:');
     console.log(model.state.search.results);
+
+    resultsView.render(model.state.search.results);
   } catch (error) {
     console.error(`Error from controller -> ${error.message}`);
-
-    //recipeView.renderError(error.message);
   }
 };
 

@@ -11,6 +11,7 @@ class SearchView extends View {
     this._parentElement = document.querySelector('.search');
     this._searchInputElement =
       this._parentElement.querySelector('.search__field');
+    this._errorMessage = 'Searching for recipe failed. Try again.';
   }
 
   // Publisher

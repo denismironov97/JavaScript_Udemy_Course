@@ -16,6 +16,8 @@ class RecipeView extends View {
     super();
 
     this._parentElement = document.querySelector('.recipe');
+    this._errorMessage =
+      'Problem with loading current recipe. Please try again.';
   }
 
   //Publisher
@@ -75,9 +77,7 @@ class RecipeView extends View {
       </div>
     
       <div class="recipe__user-generated">
-        <svg>
-          <use href="${iconsSVG}.svg#icon-user"></use>
-        </svg>
+        
       </div>
       <button class="btn--round">
         <svg class="">
