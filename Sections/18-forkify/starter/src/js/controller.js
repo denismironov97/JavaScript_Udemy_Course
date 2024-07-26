@@ -9,6 +9,9 @@ import 'regenerator-runtime/runtime';
 //Model
 import * as model from '../js/model.js';
 
+//Config
+import { PAGINATION_LOAD_DELAY } from './config.js';
+
 //Views
 import recipeView from './views/recipeView.js';
 import searchView from './views/searchView.js';
@@ -78,11 +81,15 @@ const controlSearchResults = async function (event) {
 
 const controlPagination = function (goToPageNumber) {
   try {
-    // 1) Render NEW/Next segmentation recipe results
-    resultsView.render(model.getPaginatedSearchResult(goToPageNumber));
+    resultsView.renderSpinnerAnimation();
 
-    // 2) Render NEW pagination number buttons
-    paginationView.render(model.state.search);
+    setTimeout(() => {
+      // 1) Render NEW/Next segmentation recipe results
+      resultsView.render(model.getPaginatedSearchResult(goToPageNumber));
+
+      // 2) Render NEW pagination number buttons
+      paginationView.render(model.state.search);
+    }, PAGINATION_LOAD_DELAY);
   } catch (error) {
     console.error(`Error from controller -> ${error.message}`);
   }
