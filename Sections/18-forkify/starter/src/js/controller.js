@@ -13,11 +13,14 @@ import * as model from '../js/model.js';
 import recipeView from './views/recipeView.js';
 import searchView from './views/searchView.js';
 import resultsView from './views/resultsView.js';
+import paginationView from './views/paginationView.js';
 
 //Hot module reloading
+/*
 if (module.hot) {
   module.hot.accept();
 }
+*/
 
 const controlRecipes = async function (event) {
   const recipeId = window.location.hash.slice(1);
@@ -63,8 +66,23 @@ const controlSearchResults = async function (event) {
     // 3) Render search results
     console.log('Recipes:');
     console.log(model.state.search.results);
+    //resultsView.render(model.state.search.results);
+    resultsView.render(model.getPaginatedSearchResult());
 
-    resultsView.render(model.state.search.results);
+    // 4) Render initial pagination buttons
+    paginationView.render(model.state.search);
+  } catch (error) {
+    console.error(`Error from controller -> ${error.message}`);
+  }
+};
+
+const controlPagination = function (goToPageNumber) {
+  try {
+    // 1) Render NEW/Next segmentation recipe results
+    resultsView.render(model.getPaginatedSearchResult(goToPageNumber));
+
+    // 2) Render NEW pagination number buttons
+    paginationView.render(model.state.search);
   } catch (error) {
     console.error(`Error from controller -> ${error.message}`);
   }
@@ -76,6 +94,8 @@ const init = function () {
 
   // Subscriber - searchView
   searchView.addHandlerSearch(controlSearchResults);
-};
 
+  // Subscriber - paginationView
+  paginationView.addHandlerClick(controlPagination);
+};
 init();

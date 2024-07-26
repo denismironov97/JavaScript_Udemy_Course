@@ -2,7 +2,7 @@
 
 import { async } from 'regenerator-runtime';
 
-import { API_URL } from './config.js';
+import { API_URL, RESULTS_PER_PAGE } from './config.js';
 import { getJSONData, restructureObjectKeys } from './utils.js';
 
 export const state = {
@@ -10,6 +10,8 @@ export const state = {
   search: {
     query: undefined,
     results: [],
+    resultsPerPage: RESULTS_PER_PAGE,
+    currPage: 1,
   },
 };
 
@@ -50,4 +52,16 @@ export const loadSearchResults = async function (queryString) {
     console.error(`Error from model -> ${error.message}`);
     throw error;
   }
+};
+
+//getSearchResultsPage
+export const getPaginatedSearchResult = function (pageNumber = 1) {
+  state.search.currPage = pageNumber;
+
+  const startIndex = (pageNumber - 1) * state.search.resultsPerPage;
+  const endIndex = pageNumber * state.search.resultsPerPage;
+
+  const paginatedDataArr = state.search.results.slice(startIndex, endIndex);
+
+  return paginatedDataArr;
 };
