@@ -13,6 +13,7 @@ export const state = {
     resultsPerPage: RESULTS_PER_PAGE,
     currPage: 1,
   },
+  multipleIngredientServingsQty: [],
 };
 
 export const loadRecipeData = async function (id) {
@@ -64,4 +65,26 @@ export const getPaginatedSearchResult = function (pageNumber = 1) {
   const paginatedDataArr = state.search.results.slice(startIndex, endIndex);
 
   return paginatedDataArr;
+};
+
+export const updateServings = function (newServingsNum) {
+  const oldServingsNum = state.recipe.servings;
+
+  state.multipleIngredientServingsQty = state.recipe.ingredients.map(
+    currIngObj => {
+      if (!currIngObj.quantity) {
+        return currIngObj;
+      }
+
+      // newIngQty = oldIngQty * newServingsNumber / oldServingsNumber
+      const oldIngQty = currIngObj.quantity;
+      const newIngQty = (oldIngQty * newServingsNum) / oldServingsNum;
+      currIngObj.quantity = newIngQty;
+
+      return currIngObj;
+    }
+  );
+
+  state.recipe.ingredients = [...state.multipleIngredientServingsQty];
+  state.recipe.servings = newServingsNum;
 };

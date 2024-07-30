@@ -95,9 +95,18 @@ const controlPagination = function (goToPageNumber) {
   }
 };
 
+const controlServings = function (newServingsNumber) {
+  // Update recipe servings quantity
+  model.updateServings(newServingsNumber);
+
+  // Rerender whole recipe View with the modified recipe ingredients quantity data
+  recipeView.render(model.state.recipe);
+};
+
 const init = function () {
   // Subscriber - recipeView
   recipeView.addHandlerRender(controlRecipes);
+  recipeView.addHandlerUpdateServings(controlServings);
 
   // Subscriber - searchView
   searchView.addHandlerSearch(controlSearchResults);

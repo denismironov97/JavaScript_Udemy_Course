@@ -20,11 +20,26 @@ class RecipeView extends View {
       'Problem with loading current recipe. Please try again.';
   }
 
-  //Publisher
+  //Publisher-s
   addHandlerRender(handlerCallbackFn) {
     this._windowEventTypes.forEach(currEv =>
       window.addEventListener(currEv, handlerCallbackFn)
     );
+  }
+
+  addHandlerUpdateServings(handlerCallbackFn) {
+    this._parentElement.addEventListener('click', function clickHandler(event) {
+      // Closest clicked btn Element. Could be decrease or increase btn Elem.
+      const btnElement = event.target.closest('.btn--tiny');
+
+      if (!btnElement) {
+        return;
+      }
+
+      const newServingsNum = Number(btnElement.dataset.servingsNum);
+
+      handlerCallbackFn(newServingsNum);
+    });
   }
 
   _generateMarkup() {
@@ -63,12 +78,16 @@ class RecipeView extends View {
         <span class="recipe__info-text">servings</span>
     
         <div class="recipe__info-buttons">
-          <button class="btn--tiny btn--increase-servings">
+          <button data-servings-num="${
+            this._data.servings - 1
+          }" class="btn--tiny btn--decrease-servings">
             <svg>
               <use href="${iconsSVG}.svg#icon-minus-circle"></use>
             </svg>
           </button>
-          <button class="btn--tiny btn--increase-servings">
+          <button data-servings-num="${
+            this._data.servings + 1
+          }" class="btn--tiny btn--increase-servings">
             <svg>
               <use href="${iconsSVG}.svg#icon-plus-circle"></use>
             </svg>
