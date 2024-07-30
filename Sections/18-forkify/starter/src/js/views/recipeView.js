@@ -38,6 +38,12 @@ class RecipeView extends View {
 
       const newServingsNum = Number(btnElement.dataset.servingsNum);
 
+      // Add a guard clause to ensure newServingsNum is at least 1 to prevent negative or zero servings.
+      if (newServingsNum < 1) {
+        console.log('clause activated!');
+        return;
+      }
+
       handlerCallbackFn(newServingsNum);
     });
   }
