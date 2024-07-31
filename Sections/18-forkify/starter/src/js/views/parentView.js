@@ -25,6 +25,40 @@ export default class ParentView {
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
   }
 
+  updateRender(valueData) {
+    console.log('updateRender accepting arg:', valueData);
+
+    if (!valueData || (Array.isArray(valueData) && valueData?.length === 0)) {
+      return this._renderError();
+    }
+
+    this._data = valueData;
+
+    const newMarkup = this._generateMarkup();
+
+    // Virtual DOM in memory not on DOM on browser client
+    const newDomRange = document
+      .createRange()
+      .createContextualFragment(newMarkup);
+
+    // Array of all dom elements from range
+    const newVirtualElements = Array.from(newDomRange.querySelectorAll('*'));
+    const oldBrowserElements = Array.from(
+      this._parentElement.querySelectorAll('*')
+    );
+
+    newVirtualElements.forEach((newCurrVirtualElem, currIndex) => {
+      const oldCurrBrowserElem = oldBrowserElements[currIndex];
+
+      if (
+        !newCurrVirtualElem.isEqualNode(oldCurrBrowserElem) &&
+        newCurrVirtualElem?.firstChild.nodeValue.trim()
+      ) {
+        oldCurrBrowserElem.textContent = newCurrVirtualElem.textContent;
+      }
+    });
+  }
+
   renderSpinnerAnimation() {
     const spinnerMarkup = `
     <div class="spinner">

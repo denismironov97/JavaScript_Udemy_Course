@@ -100,7 +100,7 @@ const controlServings = function (newServingsNumber) {
   model.updateServings(newServingsNumber);
 
   // Rerender whole recipe View with the modified recipe ingredients quantity data
-  recipeView.render(model.state.recipe);
+  recipeView.updateRender(model.state.recipe);
 };
 
 const init = function () {
