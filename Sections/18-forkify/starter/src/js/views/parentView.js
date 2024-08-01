@@ -73,6 +73,7 @@ export default class ParentView {
 
     let numIterations = 0;
 
+    // [decreaseServingsOldBrowserEl, decreaseServingsNewBrowserEl], [increaseServingsOldBrowserEl, increaseServingsNewBrowserEl]
     const [[decServOldBrEl, decServNewBrEl], [incServOldBrEl, incServNewBrEl]] =
       newVirtualElements.reduce(function (acc, newCurrVirtualElem, currIndex) {
         const oldCurrBrowserElem = oldBrowserElements[currIndex];
