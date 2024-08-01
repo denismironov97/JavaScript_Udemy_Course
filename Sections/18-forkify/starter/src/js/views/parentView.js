@@ -47,16 +47,61 @@ export default class ParentView {
       this._parentElement.querySelectorAll('*')
     );
 
+    /*
+    // Old fix - works fine
     newVirtualElements.forEach((newCurrVirtualElem, currIndex) => {
       const oldCurrBrowserElem = oldBrowserElements[currIndex];
 
+      // Updates changed textContext
+      // First Node str is truthy
       if (
         !newCurrVirtualElem.isEqualNode(oldCurrBrowserElem) &&
         newCurrVirtualElem?.firstChild.nodeValue.trim()
       ) {
         oldCurrBrowserElem.textContent = newCurrVirtualElem.textContent;
       }
+  
+      if (
+        !newCurrVirtualElem.isEqualNode(oldCurrBrowserElem) &&
+        newCurrVirtualElem.nodeName === 'BUTTON'
+      ) {
+        oldCurrBrowserElem.dataset.servingsNum =
+          newCurrVirtualElem.dataset.servingsNum;
+      }
     });
+    */
+
+    let numIterations = 0;
+
+    const [[decServOldBrEl, decServNewBrEl], [incServOldBrEl, incServNewBrEl]] =
+      newVirtualElements.reduce(function (acc, newCurrVirtualElem, currIndex) {
+        const oldCurrBrowserElem = oldBrowserElements[currIndex];
+
+        // Updates changed textContext
+        // First Node str is truthy
+        if (
+          !newCurrVirtualElem.isEqualNode(oldCurrBrowserElem) &&
+          newCurrVirtualElem?.firstChild.nodeValue.trim()
+        ) {
+          oldCurrBrowserElem.textContent = newCurrVirtualElem.textContent;
+        }
+
+        if (
+          !newCurrVirtualElem.isEqualNode(oldCurrBrowserElem) &&
+          newCurrVirtualElem.nodeName === 'BUTTON'
+        ) {
+          acc.push([oldCurrBrowserElem, newCurrVirtualElem]);
+        }
+
+        numIterations++;
+
+        return acc;
+      }, []);
+
+    decServOldBrEl.dataset.servingsNum = decServNewBrEl.dataset.servingsNum;
+    incServOldBrEl.dataset.servingsNum = incServNewBrEl.dataset.servingsNum;
+
+    console.log('numIterations:', numIterations);
   }
 
   renderSpinnerAnimation() {
