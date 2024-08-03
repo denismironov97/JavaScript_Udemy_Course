@@ -37,9 +37,8 @@ export default class ParentView {
     const newMarkup = this._generateMarkup();
 
     // Virtual DOM in memory not on DOM on browser client
-    const newDomRange = document
-      .createRange()
-      .createContextualFragment(newMarkup);
+    // prettier-ignore
+    const newDomRange = document.createRange().createContextualFragment(newMarkup);
 
     // Array of all dom elements from range
     const newVirtualElements = Array.from(newDomRange.querySelectorAll('*'));
@@ -73,36 +72,48 @@ export default class ParentView {
 
     let numIterations = 0;
 
+    const accArrEls = newVirtualElements.reduce(function (
+      acc,
+      newCurrVirtualElem,
+      currIndex
+    ) {
+      const oldCurrBrowserElem = oldBrowserElements[currIndex];
+
+      // Updates changed textContext
+      // First Node str is truthy
+      if (
+        !newCurrVirtualElem.isEqualNode(oldCurrBrowserElem) &&
+        newCurrVirtualElem?.firstChild.nodeValue.trim()
+      ) {
+        oldCurrBrowserElem.textContent = newCurrVirtualElem.textContent;
+      }
+
+      if (
+        !newCurrVirtualElem.isEqualNode(oldCurrBrowserElem) &&
+        newCurrVirtualElem.nodeName === 'BUTTON'
+      ) {
+        acc.push([oldCurrBrowserElem, newCurrVirtualElem]);
+      }
+
+      numIterations++;
+
+      return acc;
+    },
+    []);
+
+    // Guard clause check if arr is empty 0 is falsy value
+    if (!accArrEls.length) {
+      return;
+    }
+
     // [decreaseServingsOldBrowserEl, decreaseServingsNewBrowserEl], [increaseServingsOldBrowserEl, increaseServingsNewBrowserEl]
     const [[decServOldBrEl, decServNewBrEl], [incServOldBrEl, incServNewBrEl]] =
-      newVirtualElements.reduce(function (acc, newCurrVirtualElem, currIndex) {
-        const oldCurrBrowserElem = oldBrowserElements[currIndex];
-
-        // Updates changed textContext
-        // First Node str is truthy
-        if (
-          !newCurrVirtualElem.isEqualNode(oldCurrBrowserElem) &&
-          newCurrVirtualElem?.firstChild.nodeValue.trim()
-        ) {
-          oldCurrBrowserElem.textContent = newCurrVirtualElem.textContent;
-        }
-
-        if (
-          !newCurrVirtualElem.isEqualNode(oldCurrBrowserElem) &&
-          newCurrVirtualElem.nodeName === 'BUTTON'
-        ) {
-          acc.push([oldCurrBrowserElem, newCurrVirtualElem]);
-        }
-
-        numIterations++;
-
-        return acc;
-      }, []);
+      accArrEls;
 
     decServOldBrEl.dataset.servingsNum = decServNewBrEl.dataset.servingsNum;
     incServOldBrEl.dataset.servingsNum = incServNewBrEl.dataset.servingsNum;
 
-    console.log('numIterations:', numIterations);
+    //console.log('numIterations:', numIterations);
   }
 
   renderSpinnerAnimation() {

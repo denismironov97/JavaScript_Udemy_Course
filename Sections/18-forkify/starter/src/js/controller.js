@@ -34,6 +34,9 @@ const controlRecipes = async function (event) {
       return;
     }
 
+    // Update resultsView to mark selected search result/recipe
+    resultsView.updateRender(model.getPaginatedSearchResult());
+
     //Rendering spinner animation before loading and rendering the recipe
     recipeView.renderSpinnerAnimation();
 

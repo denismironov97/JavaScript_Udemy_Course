@@ -23,9 +23,13 @@ class ResultsView extends View {
   }
 
   _generateListElementMarkup({ publisher, imageUrl, title, id }) {
+    const currUrlId = window.location.hash.slice(1);
+    const activePreviewLinkClass =
+      id === currUrlId ? 'preview__link--active' : '';
+
     const listElMarkup = `
     <li class="preview">
-	    <a class="preview__link" href="#${id}">
+	    <a class="preview__link ${activePreviewLinkClass}" href="#${id}">
 		    <figure class="preview__fig">
 			    <img src="${imageUrl}" alt="${title}" />
 		    </figure>
