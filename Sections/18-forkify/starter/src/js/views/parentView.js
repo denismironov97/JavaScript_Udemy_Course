@@ -92,7 +92,7 @@ export default class ParentView {
             acc.push([oldCurrBrowserElem, newCurrVirtualElem]);
             break;
           case 'A':
-            //setAttributesOfElem(oldCurrBrowserElem, newCurrVirtualElem);
+            setAttributesOfElem(oldCurrBrowserElem, newCurrVirtualElem);
             break;
         }
       }
