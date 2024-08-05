@@ -78,26 +78,36 @@ export default class ParentView {
       currIndex
     ) {
       const oldCurrBrowserElem = oldBrowserElements[currIndex];
+      const nodesAreNotEqual =
+        !newCurrVirtualElem.isEqualNode(oldCurrBrowserElem);
 
-      // Updates changed textContext
-      // First Node str is truthy
-      if (
-        !newCurrVirtualElem.isEqualNode(oldCurrBrowserElem) &&
-        newCurrVirtualElem?.firstChild.nodeValue.trim()
-      ) {
-        oldCurrBrowserElem.textContent = newCurrVirtualElem.textContent;
-      }
+      if (nodesAreNotEqual) {
+        // Updates changed textContent
+        if (newCurrVirtualElem?.firstChild?.nodeValue.trim()) {
+          oldCurrBrowserElem.textContent = newCurrVirtualElem.textContent;
+        }
 
-      if (
-        !newCurrVirtualElem.isEqualNode(oldCurrBrowserElem) &&
-        newCurrVirtualElem.nodeName === 'BUTTON'
-      ) {
-        acc.push([oldCurrBrowserElem, newCurrVirtualElem]);
+        switch (oldCurrBrowserElem.nodeName) {
+          case 'BUTTON':
+            acc.push([oldCurrBrowserElem, newCurrVirtualElem]);
+            break;
+          case 'A':
+            //setAttributesOfElem(oldCurrBrowserElem, newCurrVirtualElem);
+            break;
+        }
       }
 
       numIterations++;
 
       return acc;
+
+      function setAttributesOfElem(oldElem, newVirtualElem) {
+        // Iterate through all attributes of the new element and set them to the old element
+
+        for (const currAttr of newVirtualElem.attributes) {
+          oldElem.setAttribute(currAttr.name, currAttr.value);
+        }
+      }
     },
     []);
 
@@ -107,13 +117,13 @@ export default class ParentView {
     }
 
     // [decreaseServingsOldBrowserEl, decreaseServingsNewBrowserEl], [increaseServingsOldBrowserEl, increaseServingsNewBrowserEl]
-    const [[decServOldBrEl, decServNewBrEl], [incServOldBrEl, incServNewBrEl]] =
-      accArrEls;
+    const [decServOldBrEl, decServNewBrEl, incServOldBrEl, incServNewBrEl] =
+      accArrEls.flat();
 
     decServOldBrEl.dataset.servingsNum = decServNewBrEl.dataset.servingsNum;
     incServOldBrEl.dataset.servingsNum = incServNewBrEl.dataset.servingsNum;
 
-    //console.log('numIterations:', numIterations);
+    console.log('numIterations:', numIterations);
   }
 
   renderSpinnerAnimation() {
