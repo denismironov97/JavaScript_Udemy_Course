@@ -106,10 +106,20 @@ const controlServings = function (newServingsNumber) {
   recipeView.updateRender(model.state.recipe);
 };
 
+const controlAddBookmark = function () {
+  model.addBookmark(model.state.recipe);
+
+  console.log('controllerAddBookmark=>', model.state.bookmarks);
+};
+
 const init = function () {
   // Subscriber - recipeView
   recipeView.addHandlerRender(controlRecipes);
+  /*
   recipeView.addHandlerUpdateServings(controlServings);
+  recipeView.addHandlerBookmark(controllerAddBookmark);
+  */
+  recipeView.addHandlers(controlServings, controlAddBookmark);
 
   // Subscriber - searchView
   searchView.addHandlerSearch(controlSearchResults);

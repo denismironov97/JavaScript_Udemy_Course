@@ -14,6 +14,7 @@ export const state = {
     currPage: 1,
   },
   multipleIngredientServingsQty: [],
+  bookmarks: [],
 };
 
 export const loadRecipeData = async function (id) {
@@ -87,4 +88,14 @@ export const updateServings = function (newServingsNum) {
 
   state.recipe.ingredients = [...state.multipleIngredientServingsQty];
   state.recipe.servings = newServingsNum;
+};
+
+export const addBookmark = function (recipeObj) {
+  // Add bookmark
+  state.bookmarks.push(recipeObj);
+
+  //Mark current recipe as bookmarked
+  if (state.recipe.id === recipeObj.id) {
+    state.recipe.bookmarked = true;
+  }
 };

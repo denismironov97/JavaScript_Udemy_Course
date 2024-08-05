@@ -27,6 +27,7 @@ class RecipeView extends View {
     );
   }
 
+  /*
   addHandlerUpdateServings(handlerCallbackFn) {
     this._parentElement.addEventListener('click', function clickHandler(event) {
       // Closest clicked btn Element. Could be decrease or increase btn Elem.
@@ -45,6 +46,43 @@ class RecipeView extends View {
       }
 
       handlerCallbackFn(newServingsNum);
+    });
+  }
+
+  addHandlerBookmark(handlerCallbackFn) {
+    this._parentElement.addEventListener('click', function (event) {
+      const bookmarkBtn = event.target.closest('.btn--bookmark');
+
+      if (!bookmarkBtn) {
+        return;
+      }
+
+      handlerCallbackFn();
+    });
+  }
+  */
+
+  addHandlers(handlerUpdateServingsFn, handlerBookmarkFn) {
+    this._parentElement.addEventListener('click', function (event) {
+      const btnElement = event.target.closest('.btn--tiny, .btn--bookmark');
+
+      if (!btnElement) {
+        return;
+      }
+
+      if (btnElement.classList.contains('btn--tiny')) {
+        const newServingsNum = Number(btnElement.dataset.servingsNum);
+
+        // Add a guard clause to ensure newServingsNum is at least 1 to prevent negative or zero servings.
+        if (newServingsNum < 1) {
+          console.log('Guard clause activated!');
+          return;
+        }
+
+        handlerUpdateServingsFn(newServingsNum);
+      } else if (btnElement.classList.contains('btn--bookmark')) {
+        handlerBookmarkFn();
+      }
     });
   }
 
@@ -104,9 +142,9 @@ class RecipeView extends View {
       <div class="recipe__user-generated">
         
       </div>
-      <button class="btn--round">
+      <button class="btn--round btn--bookmark">
         <svg class="">
-          <use href="${iconsSVG}.svg#icon-bookmark-fill"></use>
+          <use href="${iconsSVG}.svg#icon-bookmark"></use>
         </svg>
       </button>
     </div>
