@@ -81,13 +81,17 @@ export default class ParentView {
       const nodesAreNotEqual =
         !newCurrVirtualElem.isEqualNode(oldCurrBrowserElem);
 
+      if (!oldCurrBrowserElem) {
+        return acc;
+      }
+
       if (nodesAreNotEqual) {
         // Updates changed textContent
         if (newCurrVirtualElem?.firstChild?.nodeValue.trim()) {
           oldCurrBrowserElem.textContent = newCurrVirtualElem.textContent;
         }
 
-        if (oldCurrBrowserElem.nodeName === 'BUTTON') {
+        if (oldCurrBrowserElem?.nodeName === 'BUTTON') {
           // Checks for bookmark elem
           if (oldCurrBrowserElem.classList.contains('btn--bookmark')) {
             const oldBrowserUseElem =
@@ -104,7 +108,7 @@ export default class ParentView {
           }
 
           acc.push([oldCurrBrowserElem, newCurrVirtualElem]);
-        } else if (oldCurrBrowserElem.nodeName === 'A') {
+        } else if (oldCurrBrowserElem?.nodeName === 'A') {
           setAttributesOfElem(oldCurrBrowserElem, newCurrVirtualElem);
         }
       }
