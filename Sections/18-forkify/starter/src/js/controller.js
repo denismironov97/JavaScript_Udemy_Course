@@ -4,19 +4,21 @@
 import 'core-js/stable';
 
 //Polyfilling async/await
-import 'regenerator-runtime/runtime';
+import 'regenerator-runtime/runtime.js';
+import { async } from 'regenerator-runtime';
 
 //Model
 import * as model from '../js/model.js';
-
-//Config
-import { PAGINATION_LOAD_DELAY } from './config.js';
 
 //Views
 import recipeView from './views/recipeView.js';
 import searchView from './views/searchView.js';
 import resultsView from './views/resultsView.js';
 import paginationView from './views/paginationView.js';
+import bookmarksPanelView from './views/bookmarksPanelView.js';
+
+//Config
+import { PAGINATION_LOAD_DELAY } from './config.js';
 
 //Hot module reloading
 /*
@@ -36,6 +38,7 @@ const controlRecipes = async function (event) {
 
     // Update resultsView to mark selected search result/recipe
     resultsView.updateRender(model.getPaginatedSearchResult());
+    bookmarksPanelView.updateRender(model.state.bookmarks);
 
     //Rendering spinner animation before loading and rendering the recipe
     recipeView.renderSpinnerAnimation();
@@ -111,6 +114,7 @@ const controlServings = function (newServingsNumber) {
 };
 
 const controlRecipeBookmark = function () {
+  // 1) Add/Remove bookmark
   // Not bookmarked we add bookmark
   if (!model.state.recipe.bookmarked) {
     model.addBookmark(model.state.recipe);
@@ -118,7 +122,11 @@ const controlRecipeBookmark = function () {
     model.deleteBookmark(model.state.recipe.id);
   }
 
+  // 2) Update recipe view
   recipeView.updateRender(model.state.recipe);
+
+  // 3) Render bookmarks panel
+  bookmarksPanelView.render(model.state.bookmarks);
 };
 
 const init = function () {

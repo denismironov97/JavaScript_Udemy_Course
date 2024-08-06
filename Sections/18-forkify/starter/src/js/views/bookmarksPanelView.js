@@ -2,24 +2,21 @@
 
 //Importing svg-s from source dir to use them in distribution dir
 import iconsSVG from 'url:../../img/icons.svg';
-
-//Importing parent class - ParentView
 import View from './parentView.js';
 
-class ResultsView extends View {
+class bookmarksPanelView extends View {
   constructor() {
     super();
 
-    this._parentElement = document.querySelector('.results');
-    this._errorMessage = 'No recipes found from search. Please try again.';
+    this._parentElement = document.querySelector('.bookmarks__list');
+    this._errorMessage =
+      'No bookmarks yet. Find a nice recipe and bookmark it.';
   }
 
   _generateMarkup() {
-    const searchQueryResults = this._data
-      .map(this._generateMarkupPreview)
-      .join('');
+    const bookmarkEls = this._data.map(this._generateMarkupPreview).join('');
 
-    return searchQueryResults;
+    return bookmarkEls;
   }
 
   _generateMarkupPreview({ publisher, imageUrl, title, id }) {
@@ -48,4 +45,4 @@ class ResultsView extends View {
   }
 }
 
-export default new ResultsView();
+export default new bookmarksPanelView();
