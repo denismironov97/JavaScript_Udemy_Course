@@ -99,17 +99,26 @@ const controlPagination = function (goToPageNumber) {
 };
 
 const controlServings = function (newServingsNumber) {
-  // Update recipe servings quantity
-  model.updateServings(newServingsNumber);
+  try {
+    // Update recipe servings quantity
+    model.updateServings(newServingsNumber);
 
-  // Rerender whole recipe View with the modified recipe ingredients quantity data
-  recipeView.updateRender(model.state.recipe);
+    // Rerender whole recipe View with the modified recipe ingredients quantity data
+    recipeView.updateRender(model.state.recipe);
+  } catch (error) {
+    console.error(`Error from controller -> ${error.message}`);
+  }
 };
 
-const controlAddBookmark = function () {
-  model.addBookmark(model.state.recipe);
+const controlRecipeBookmark = function () {
+  // Not bookmarked we add bookmark
+  if (!model.state.recipe.bookmarked) {
+    model.addBookmark(model.state.recipe);
+  } else if (model.state.recipe.bookmarked) {
+    model.deleteBookmark(model.state.recipe.id);
+  }
 
-  console.log('controllerAddBookmark=>', model.state.bookmarks);
+  recipeView.updateRender(model.state.recipe);
 };
 
 const init = function () {
@@ -119,7 +128,7 @@ const init = function () {
   recipeView.addHandlerUpdateServings(controlServings);
   recipeView.addHandlerBookmark(controllerAddBookmark);
   */
-  recipeView.addHandlers(controlServings, controlAddBookmark);
+  recipeView.addHandlers(controlServings, controlRecipeBookmark);
 
   // Subscriber - searchView
   searchView.addHandlerSearch(controlSearchResults);

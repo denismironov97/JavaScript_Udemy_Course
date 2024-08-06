@@ -17,15 +17,19 @@ export const state = {
   bookmarks: [],
 };
 
-export const loadRecipeData = async function (id) {
+export const loadRecipeData = async function (idArg) {
   try {
     const {
       data: { recipe },
-    } = await getJSONData(`${API_URL}/${id}`);
+    } = await getJSONData(`${API_URL}/${idArg}`);
 
     const restructuredRecipeData = restructureObjectKeys(recipe);
-
     state.recipe = restructuredRecipeData;
+
+    const isRecipeBookmarked = state.bookmarks.some(
+      bookmark => bookmark.id === state.recipe.id
+    );
+    state.recipe.bookmarked = isRecipeBookmarked;
   } catch (error) {
     console.error(`Error from model -> ${error.message}`);
     throw error;
@@ -97,5 +101,19 @@ export const addBookmark = function (recipeObj) {
   //Mark current recipe as bookmarked
   if (state.recipe.id === recipeObj.id) {
     state.recipe.bookmarked = true;
+  }
+};
+
+export const deleteBookmark = function (id) {
+  // Delete bookmarked recipe
+  const bookmarkIndex = state.bookmarks.findIndex(
+    bookmarkedRecipe => bookmarkedRecipe.id === id
+  );
+  const deletedRecipe = state.bookmarks.splice(bookmarkIndex, 1)[0];
+  // Has the same reference that points to Heap memory as state.recipe. Removed elem === state.recipe (same ref point in mem).
+
+  // Mark current recipe NOT bookmarked
+  if (state.recipe.id === id) {
+    state.recipe.bookmarked = false;
   }
 };

@@ -87,13 +87,25 @@ export default class ParentView {
           oldCurrBrowserElem.textContent = newCurrVirtualElem.textContent;
         }
 
-        switch (oldCurrBrowserElem.nodeName) {
-          case 'BUTTON':
-            acc.push([oldCurrBrowserElem, newCurrVirtualElem]);
-            break;
-          case 'A':
-            setAttributesOfElem(oldCurrBrowserElem, newCurrVirtualElem);
-            break;
+        if (oldCurrBrowserElem.nodeName === 'BUTTON') {
+          // Checks for bookmark elem
+          if (oldCurrBrowserElem.classList.contains('btn--bookmark')) {
+            const oldBrowserUseElem =
+              oldCurrBrowserElem.firstElementChild.firstElementChild;
+            const newVirtualUseElem =
+              newCurrVirtualElem.firstElementChild.firstElementChild;
+
+            setAttributesOfElem(
+              oldCurrBrowserElem.firstElementChild.firstElementChild,
+              newCurrVirtualElem.firstElementChild.firstElementChild
+            );
+
+            return acc;
+          }
+
+          acc.push([oldCurrBrowserElem, newCurrVirtualElem]);
+        } else if (oldCurrBrowserElem.nodeName === 'A') {
+          setAttributesOfElem(oldCurrBrowserElem, newCurrVirtualElem);
         }
       }
 

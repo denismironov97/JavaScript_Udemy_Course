@@ -96,7 +96,10 @@ class RecipeView extends View {
       servings,
       cookingTime,
       id,
+      bookmarked,
     } = this._data;
+
+    const bookmarkFilledState = bookmarked ? '-fill' : '';
 
     const recipeMarkup = `
     <figure class="recipe__fig">
@@ -144,7 +147,7 @@ class RecipeView extends View {
       </div>
       <button class="btn--round btn--bookmark">
         <svg class="">
-          <use href="${iconsSVG}.svg#icon-bookmark"></use>
+          <use href="${iconsSVG}.svg#icon-bookmark${bookmarkFilledState}"></use>
         </svg>
       </button>
     </div>
