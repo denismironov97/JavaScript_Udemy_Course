@@ -11,7 +11,7 @@ export default class ParentView {
 
   constructor() {}
 
-  render(valueData) {
+  render(valueData, renderBoolFlag = true) {
     console.log('Value Data:', valueData);
 
     if (!valueData || (Array.isArray(valueData) && valueData?.length === 0)) {
@@ -20,6 +20,10 @@ export default class ParentView {
 
     this._data = valueData;
     const markup = this._generateMarkup();
+
+    if (!renderBoolFlag) {
+      return markup;
+    }
 
     this._clear();
     this._parentElement.insertAdjacentHTML('afterbegin', markup);

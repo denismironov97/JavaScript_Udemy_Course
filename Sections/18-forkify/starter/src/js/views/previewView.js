@@ -3,29 +3,18 @@
 //Importing svg-s from source dir to use them in distribution dir
 import iconsSVG from 'url:../../img/icons.svg';
 import View from './parentView.js';
-import previewView from './previewView.js';
 
-class bookmarksPanelView extends View {
+// Class used to generate only one preview view element.
+class previewView extends View {
   constructor() {
     super();
 
-    this._parentElement = document.querySelector('.bookmarks__list');
-    this._errorMessage =
-      'No bookmarks yet. Find a nice recipe and bookmark it.';
+    //this._parentElement = '';
   }
 
   _generateMarkup() {
-    const bookmarkEls = this._data
-      .map(currBookmarkEl => {
-        return previewView.render(currBookmarkEl, false);
-      })
-      .join('');
+    const { publisher, imageUrl, title, id } = this._data;
 
-    return bookmarkEls;
-  }
-
-  /*
-  _generateMarkupPreview({ publisher, imageUrl, title, id }) {
     const currUrlId = window.location.hash.slice(1);
     const activePreviewLinkClass =
       id === currUrlId ? 'preview__link--active' : '';
@@ -49,7 +38,6 @@ class bookmarksPanelView extends View {
 
     return listElMarkup;
   }
-  */
 }
 
-export default new bookmarksPanelView();
+export default new previewView();

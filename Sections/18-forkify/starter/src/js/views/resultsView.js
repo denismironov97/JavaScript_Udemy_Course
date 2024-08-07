@@ -5,6 +5,7 @@ import iconsSVG from 'url:../../img/icons.svg';
 
 //Importing parent class - ParentView
 import View from './parentView.js';
+import previewView from './previewView.js';
 
 class ResultsView extends View {
   constructor() {
@@ -16,12 +17,15 @@ class ResultsView extends View {
 
   _generateMarkup() {
     const searchQueryResults = this._data
-      .map(this._generateMarkupPreview)
+      .map(currSearchRes => {
+        return previewView.render(currSearchRes, false);
+      })
       .join('');
 
     return searchQueryResults;
   }
 
+  /*
   _generateMarkupPreview({ publisher, imageUrl, title, id }) {
     const currUrlId = window.location.hash.slice(1);
     const activePreviewLinkClass =
@@ -46,6 +50,7 @@ class ResultsView extends View {
 
     return listElMarkup;
   }
+  */
 }
 
 export default new ResultsView();
