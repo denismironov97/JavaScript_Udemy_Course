@@ -36,8 +36,12 @@ const controlRecipes = async function (event) {
       return;
     }
 
+    //debugger;
+
     // Update resultsView to mark selected search result/recipe
     resultsView.updateRender(model.getPaginatedSearchResult());
+
+    // Update bookmarksPanelView
     bookmarksPanelView.updateRender(model.state.bookmarks);
 
     //Rendering spinner animation before loading and rendering the recipe
@@ -129,8 +133,23 @@ const controlRecipeBookmark = function () {
   bookmarksPanelView.render(model.state.bookmarks);
 };
 
+const controlBookmarksOnLoad = function () {
+  /*
+  const bookmarksData = JSON.parse(localStorage.getItem('bookmarks'));
+
+  // if (!bookmarksData) {
+  //   return;
+  // }
+
+  // Short-circuiting operation
+  bookmarksData && bookmarksPanelView.render(bookmarksData);
+  */
+
+  bookmarksPanelView.render(model.state.bookmarks);
+};
+
 const init = function () {
-  // Subscriber - recipeView
+  // Subscriber - recipeView + bookmarksPanelView
   recipeView.addHandlerRender(controlRecipes);
   /*
   recipeView.addHandlerUpdateServings(controlServings);
@@ -143,5 +162,8 @@ const init = function () {
 
   // Subscriber - paginationView
   paginationView.addHandlerClick(controlPagination);
+
+  // Subscriber - bookmarksView
+  bookmarksPanelView.addLoadHandlerForBookmarks(controlBookmarksOnLoad);
 };
 init();

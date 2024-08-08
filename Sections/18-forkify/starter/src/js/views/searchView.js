@@ -14,7 +14,7 @@ class SearchView extends View {
     this._errorMessage = 'Searching for recipe failed. Try again.';
   }
 
-  // Publisher
+  //Publisher-s
   addHandlerSearch(handlerFn) {
     this._parentElement.addEventListener('submit', handlerFn);
   }

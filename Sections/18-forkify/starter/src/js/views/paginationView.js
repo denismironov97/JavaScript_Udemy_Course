@@ -12,6 +12,7 @@ class PaginationView extends View {
     this._parentElement = document.querySelector('.pagination');
   }
 
+  //Publisher-s
   addHandlerClick(handlerFn) {
     this._parentElement.addEventListener('click', function eventHandler(event) {
       // Event delegation

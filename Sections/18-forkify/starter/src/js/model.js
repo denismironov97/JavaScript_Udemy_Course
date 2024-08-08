@@ -102,6 +102,8 @@ export const addBookmark = function (recipeObj) {
   if (state.recipe.id === recipeObj.id) {
     state.recipe.bookmarked = true;
   }
+
+  savePersistBookmarksData();
 };
 
 export const deleteBookmark = function (id) {
@@ -116,4 +118,26 @@ export const deleteBookmark = function (id) {
   if (state.recipe.id === id) {
     state.recipe.bookmarked = false;
   }
+
+  savePersistBookmarksData();
 };
+
+//  persistBookmarks
+const savePersistBookmarksData = function () {
+  const stringifiedJSON = JSON.stringify(state.bookmarks);
+  localStorage.setItem('bookmarks', stringifiedJSON);
+};
+
+//  Initialize bookmarks from locale storage on page load or reload. Initial load of app.
+const initBmksFromStorage = function () {
+  const bookmarksStorage = JSON.parse(localStorage.getItem('bookmarks'));
+
+  /*
+  if(!bookmarksStorage) {
+    return;
+  }
+  */
+
+  state.bookmarks = bookmarksStorage ?? state.bookmarks;
+};
+initBmksFromStorage();

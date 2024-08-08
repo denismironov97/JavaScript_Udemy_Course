@@ -14,6 +14,11 @@ class bookmarksPanelView extends View {
       'No bookmarks yet. Find a nice recipe and bookmark it.';
   }
 
+  //Publisher-s
+  addLoadHandlerForBookmarks(handlerCallbackFn) {
+    window.addEventListener('load', handlerCallbackFn);
+  }
+
   _generateMarkup() {
     const bookmarkEls = this._data
       .map(currBookmarkEl => {
