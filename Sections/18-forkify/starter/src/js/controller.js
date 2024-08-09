@@ -16,9 +16,10 @@ import searchView from './views/searchView.js';
 import resultsView from './views/resultsView.js';
 import paginationView from './views/paginationView.js';
 import bookmarksPanelView from './views/bookmarksPanelView.js';
+import addRecipeView from './views/addRecipeView.js';
 
 //Config
-import { PAGINATION_LOAD_DELAY } from './config.js';
+import { PAGINATION_LOAD_DELAY as PAGINATION_LOAD_DELAY_MSEC } from './config.js';
 
 //Hot module reloading
 /*
@@ -99,7 +100,7 @@ const controlPagination = function (goToPageNumber) {
 
       // 2) Render NEW pagination number buttons
       paginationView.render(model.state.search);
-    }, PAGINATION_LOAD_DELAY);
+    }, PAGINATION_LOAD_DELAY_MSEC);
   } catch (error) {
     console.error(`Error from controller -> ${error.message}`);
   }
@@ -148,6 +149,12 @@ const controlBookmarksOnLoad = function () {
   bookmarksPanelView.render(model.state.bookmarks);
 };
 
+const controlAddNewRecipe = function (newRecipe) {
+  console.log(newRecipe);
+
+  //function to upload recipe data coming from modal
+};
+
 const init = function () {
   // Subscriber - recipeView + bookmarksPanelView
   recipeView.addHandlerRender(controlRecipes);
@@ -165,5 +172,8 @@ const init = function () {
 
   // Subscriber - bookmarksView
   bookmarksPanelView.addLoadHandlerForBookmarks(controlBookmarksOnLoad);
+
+  // Subscriber - addRecipeView
+  addRecipeView.addHandlerSubmitUploadRecipe(controlAddNewRecipe);
 };
 init();
