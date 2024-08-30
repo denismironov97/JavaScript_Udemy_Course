@@ -142,8 +142,10 @@ class RecipeView extends View {
         </div>
       </div>
     
-      <div class="recipe__user-generated">
-        
+      <div class="recipe__user-generated ${this._data.key ? '' : 'hidden'}">
+        <svg>
+          <use href="${iconsSVG}#icon-user"></use>
+        </svg>
       </div>
       <button class="btn--round btn--bookmark">
         <svg class="">
@@ -185,8 +187,16 @@ class RecipeView extends View {
   _generateIngredientsMarkup({ quantity, unit, description }) {
     (quantity ??= ''), (unit ??= '');
 
-    if (quantity) {
-      quantity = new Fraction(quantity).toString();
+    // Fractions lib does not work properly as intended sometimes
+    try {
+      if (quantity) {
+        quantity = new Fraction(quantity).toString();
+      }
+    } catch (error) {
+      console.error(`Error ocurred at Fraction formation ${error}`);
+
+      // Error handling of Fractions JS lib
+      quantity = Math.round(quantity);
     }
 
     return `

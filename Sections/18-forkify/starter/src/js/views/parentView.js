@@ -15,7 +15,7 @@ export default class ParentView {
     console.log('Value Data:', valueData);
 
     if (!valueData || (Array.isArray(valueData) && valueData?.length === 0)) {
-      return this._renderError();
+      return this.renderError();
     }
 
     this._data = valueData;
@@ -33,7 +33,7 @@ export default class ParentView {
     console.log('updateRender accepting arg:', valueData);
 
     if (!valueData || (Array.isArray(valueData) && valueData?.length === 0)) {
-      return this._renderError();
+      return this.renderError();
     }
 
     this._data = valueData;
@@ -170,9 +170,12 @@ export default class ParentView {
       <p>${successMessage}</p>
     </div>
     `;
+
+    this._clear();
+    this._parentElement.insertAdjacentHTML('afterbegin', markup);
   }
 
-  _renderError(errorMessage = this._errorMessage) {
+  renderError(errorMessage = this._errorMessage) {
     const markup = `
     <div class="error">
       <div>

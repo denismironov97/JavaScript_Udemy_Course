@@ -14,6 +14,7 @@ class addRecipeView extends View {
   _overlayWindow;
   _btnOpenModalForm;
   _btnCloseModalForm;
+  _successMessage = 'Successfully uploaded custom recipe!';
 
   constructor() {
     super();
@@ -25,15 +26,15 @@ class addRecipeView extends View {
     this._btnOpenModalForm = document.querySelector('.nav__btn--add-recipe');
     this._btnCloseModalForm = document.querySelector('.btn--close-modal');
 
-    console.log(this._overlayWindow);
-    console.log(this._recipeModalWindow);
+    // console.log(this._overlayWindow);
+    // console.log(this._recipeModalWindow);
 
     // Called as soon as page loads or object from class addRecipeView is instanced.
     this._showModalForm();
     this._hideModalForm();
   }
 
-  _toggleModalWindow() {
+  toggleModalWindow() {
     //Take the overlay elem and remove hidden class
     this._overlayWindow.classList.toggle('hidden');
     this._recipeModalWindow.classList.toggle('hidden');
@@ -42,19 +43,19 @@ class addRecipeView extends View {
   _showModalForm(handlerFnOne, handlerFnTwo) {
     this._btnOpenModalForm.addEventListener(
       'click',
-      this._toggleModalWindow.bind(this)
+      this.toggleModalWindow.bind(this)
     );
   }
 
   _hideModalForm() {
     this._overlayWindow.addEventListener(
       'click',
-      this._toggleModalWindow.bind(this)
+      this.toggleModalWindow.bind(this)
     );
 
     this._btnCloseModalForm.addEventListener(
       'click',
-      this._toggleModalWindow.bind(this)
+      this.toggleModalWindow.bind(this)
     );
   }
 
@@ -64,15 +65,11 @@ class addRecipeView extends View {
       event.preventDefault();
 
       const formData = new FormData(this);
-      const recipeData = Array.from(formData.entries());
+      const recipeData = Object.fromEntries(formData.entries());
 
       handlerFunction(recipeData);
     });
   }
-
-  _generateMarkup() {}
-
-  _generateIngredientsMarkup() {}
 }
 
 export default new addRecipeView();

@@ -8,7 +8,7 @@ export const getJSONData = async function (endpoint) {
 
     const initialServerResPromise = fetch(endpoint);
 
-    // Promise race condition between fetch data request and wrapped promise timeout.
+    // Promise race condition between fetch data request(promise not awaited) and wrapped promise timeout.
     const promiseResult = await Promise.race([
       initialServerResPromise,
       timeoutPromiseWrapper,
@@ -24,10 +24,44 @@ export const getJSONData = async function (endpoint) {
 
     return resultData;
   } catch (error) {
-    console.error(`Error from utils -> ${error.message}`);
+    console.error(`Get error from utils -> ${error.message}`);
     throw error;
   }
 };
+
+export async function postSendJSONData(urlEndpoint, postData) {
+  try {
+    const payloadData = JSON.stringify(postData);
+    const optionsObj = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+
+      //Payload of request/Data we want to send
+      body: payloadData,
+    };
+    const initialServerResPromise = fetch(urlEndpoint, optionsObj);
+
+    const timeoutPromiseWrapper = requestTimeout(TIMEOUT_SECONDS);
+
+    const promiseArr = [initialServerResPromise, timeoutPromiseWrapper];
+    // Initial server response result if request is fulfilled faster than the timeout fn.
+    const promiseResult = await Promise.race(promiseArr);
+
+    if (!promiseResult.ok) {
+      throw new Error(
+        `Initial server response failed -> status code: ${promiseResult.status} status text: ${promiseResult.statusText}!`
+      );
+    }
+
+    // Posted data response from Backend server.
+    const postedDataRes = await promiseResult.json();
+
+    return postedDataRes;
+  } catch (err) {
+    console.error(`Post error from utils - > ${err.message}`);
+    throw err;
+  }
+}
 
 export function restructureObjectKeys(obj) {
   if (Object.keys(obj).length === 0 || !obj) {
@@ -56,6 +90,44 @@ export function restructureObjectKeys(obj) {
   );
 
   return restructuredObjectKeys;
+}
+
+export function restructureObjectKeysForBackend(obj) {
+  if (Object.keys(obj).length === 0 || !obj) {
+    throw new Error(
+      'Provided object for key restructuring is either empty obj || null || undefined.'
+    );
+  }
+
+  const capitalLetterRegex = /([A-Z])/g;
+  const convertCamelToSnakeCase = function (camelCaseStr) {
+    return camelCaseStr
+      .replace(capitalLetterRegex, '_$1') // Inserts an underscore before each matched uppercase letter
+      .toLowerCase(); // Converts the entire string to lowercase
+  };
+
+  const restructObjKeysForBackend = Object.entries(obj).reduce(
+    (accNewObj, [currKey, value]) => {
+      let newKey = convertCamelToSnakeCase(currKey);
+
+      if (newKey === 'cooking_time' || newKey === 'servings') {
+        accNewObj[newKey] = Number(value);
+
+        return accNewObj;
+      }
+
+      if (newKey === 'image') {
+        newKey = 'image_url';
+      }
+
+      accNewObj[newKey] = value;
+
+      return accNewObj;
+    },
+    {}
+  );
+
+  return restructObjKeysForBackend;
 }
 
 // https://forkify-api.herokuapp.com/v2

@@ -2,8 +2,13 @@
 
 import { async } from 'regenerator-runtime';
 
-import { API_URL, RESULTS_PER_PAGE } from './config.js';
-import { getJSONData, restructureObjectKeys } from './utils.js';
+import { API_URL, RESULTS_PER_PAGE, API_KEY } from './config.js';
+import {
+  getJSONData,
+  postSendJSONData,
+  restructureObjectKeys,
+  restructureObjectKeysForBackend,
+} from './utils.js';
 
 export const state = {
   recipe: undefined,
@@ -21,7 +26,7 @@ export const loadRecipeData = async function (idArg) {
   try {
     const {
       data: { recipe },
-    } = await getJSONData(`${API_URL}/${idArg}`);
+    } = await getJSONData(`${API_URL}/${idArg}?key=${API_KEY}`);
 
     const restructuredRecipeData = restructureObjectKeys(recipe);
     state.recipe = restructuredRecipeData;
@@ -39,7 +44,7 @@ export const loadRecipeData = async function (idArg) {
 export const loadSearchResults = async function (queryString) {
   try {
     const queriedRecipesData = await getJSONData(
-      `${API_URL}?search=${queryString}`
+      `${API_URL}?search=${queryString}&key=${API_KEY}`
     );
 
     const {
@@ -126,6 +131,61 @@ export const deleteBookmark = function (id) {
 const savePersistBookmarksData = function () {
   const stringifiedJSON = JSON.stringify(state.bookmarks);
   localStorage.setItem('bookmarks', stringifiedJSON);
+};
+
+export const uploadPostRecipe = async function (recipeDataObj) {
+  const emptySpacesRegex = /\s+/g; // Improved regex to catch any whitespace, including tabs or multiple spaces.
+
+  const ingredients = Object.entries(recipeDataObj)
+    .filter(([propKey, propVal]) => {
+      return propKey.startsWith('ingredient') && propVal.trim() !== '';
+    })
+    .map(([_, propVal]) => {
+      const ingredientsArray = propVal.replace(emptySpacesRegex, '').split(',');
+
+      if (ingredientsArray.length !== 3) {
+        throw new Error(
+          'Incorrect ingredient format. Please use correct ingredient format: "quantity,unit,description"'
+        );
+      }
+
+      const [quantity, unit, description] = ingredientsArray;
+
+      const ingData = {
+        quantity: quantity ? Number(quantity) : null,
+        unit,
+        description,
+      };
+
+      return ingData;
+    });
+
+  const objPlaceholder = Object.fromEntries(
+    Object.entries(recipeDataObj).filter(
+      ([key, _]) => !key.startsWith('ingredient')
+    )
+  );
+  const postRecipeData = {
+    ...restructureObjectKeysForBackend(objPlaceholder),
+    ingredients,
+  };
+
+  const postedDataRes = await postSendJSONData(
+    `${API_URL}?key=${API_KEY}`,
+    postRecipeData
+  );
+
+  // Nested obj destructuring
+  const {
+    data: { recipe },
+    status,
+  } = postedDataRes;
+
+  const customRecipe = { status, ...restructureObjectKeys(recipe) };
+
+  state.recipe = customRecipe;
+
+  addBookmark(state.recipe);
 };
 
 //  Initialize bookmarks from locale storage on page load or reload. Initial load of app.

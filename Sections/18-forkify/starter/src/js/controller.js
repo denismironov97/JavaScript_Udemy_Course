@@ -19,7 +19,10 @@ import bookmarksPanelView from './views/bookmarksPanelView.js';
 import addRecipeView from './views/addRecipeView.js';
 
 //Config
-import { PAGINATION_LOAD_DELAY as PAGINATION_LOAD_DELAY_MSEC } from './config.js';
+import {
+  PAGINATION_LOAD_DELAY as PAGINATION_LOAD_DELAY_MSEC,
+  MODAL_CLOSE_DELAY,
+} from './config.js';
 
 //Hot module reloading
 /*
@@ -149,10 +152,35 @@ const controlBookmarksOnLoad = function () {
   bookmarksPanelView.render(model.state.bookmarks);
 };
 
-const controlAddNewRecipe = function (newRecipe) {
-  console.log(newRecipe);
+const controlAddNewRecipe = async function (newRecipe) {
+  try {
+    // Show loading spinner
+    addRecipeView.renderSpinnerAnimation();
 
-  //function to upload recipe data coming from modal
+    // Upload POST new recipe data
+    await model.uploadPostRecipe(newRecipe);
+
+    // Display a success message to client browser
+    addRecipeView.renderSuccessMessage();
+
+    // Close form modal window after slight delay
+    setTimeout(() => {
+      addRecipeView.toggleModalWindow();
+    }, MODAL_CLOSE_DELAY);
+
+    // Render recipe in recipe view
+    recipeView.render(model.state.recipe);
+
+    // Render custom recipe in bookmarks panel upon recipe creation.
+    bookmarksPanelView.render(model.state.bookmarks);
+
+    // Change ID in URL without reloading page
+    // History API of browser clients
+    window.history.pushState(null, '', `#${model.state.recipe.id}`);
+  } catch (error) {
+    console.error(error.message);
+    addRecipeView.renderError(error.message);
+  }
 };
 
 const init = function () {
