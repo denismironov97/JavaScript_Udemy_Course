@@ -11,7 +11,7 @@ const RESULTS_PER_PAGE = 10;
 
 const PAGINATION_LOAD_DELAY = 500;
 
-const MODAL_CLOSE_DELAY = 2000;
+const MODAL_CLOSE_DELAY = 2500;
 
 export {
   API_URL,

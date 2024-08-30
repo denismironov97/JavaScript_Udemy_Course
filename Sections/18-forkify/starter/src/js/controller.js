@@ -177,6 +177,11 @@ const controlAddNewRecipe = async function (newRecipe) {
     // Change ID in URL without reloading page
     // History API of browser clients
     window.history.pushState(null, '', `#${model.state.recipe.id}`);
+
+    // Restore form to original state so that client can add recipes continuously.
+    setTimeout(function () {
+      addRecipeView.restoreOriginalFormElem();
+    }, MODAL_CLOSE_DELAY + 500);
   } catch (error) {
     console.error(error.message);
     addRecipeView.renderError(error.message);
